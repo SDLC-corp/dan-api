@@ -1,0 +1,8 @@
+module.exports.addPostMaster = require("./addPortMasters.controller")
+module.exports.listController = require("./list.controller")
+module.exports.portMasterlistWithLimit = require("./portMasterListLimit.controller")
+module.exports.updateController = require("./update.controller")
+module.exports.getById = require("./getSingle.controller")
+module.exports.deletePortMaster= require("./deletePortMasters.controller")
+module.exports.listPortMasterControllerForCollectionName= require("./portMasterListForColllectionName")
+module.exports.getSyncPortMaster= require("./getSyncPortMaster.controller")

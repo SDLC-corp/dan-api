@@ -1,0 +1,6 @@
+module.exports.addLabel = require('./add.service')
+module.exports.list = require('./list.service')
+module.exports.getLabelById = require('./getById.service')
+module.exports.updateLabel = require('./update.service')
+module.exports.generateMatrix = require('./generateMatrix.service')
+module.exports.deleteLabel = require('./delete.service')

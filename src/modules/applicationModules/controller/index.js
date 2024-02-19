@@ -1,0 +1,1 @@
+module.exports.moduleListController = require('./getModules.controller')

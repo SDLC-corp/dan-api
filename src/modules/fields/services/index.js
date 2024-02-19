@@ -1,0 +1,5 @@
+module.exports.addField = require('./add.service')
+module.exports.getFieldById = require('./service.getById')
+module.exports.updateField = require('./update.service')
+module.exports.list = require('./list.service')
+module.exports.deleteFieldsServices = require('./deleteFields.service')

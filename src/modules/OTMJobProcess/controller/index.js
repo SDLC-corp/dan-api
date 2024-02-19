@@ -1,0 +1,5 @@
+module.exports.getJobList = require('./listJob.controller')
+module.exports.addJobProcess = require('./addJob.controller')
+module.exports.getJobById = require('./getJobById.controller')
+module.exports.getJobByDocumentId = require('./getJobByDocumentId.controller')
+module.exports.getJobListWithOutLimit = require('./getJobWithOutLimit.controller')

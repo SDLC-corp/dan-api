@@ -1,0 +1,6 @@
+module.exports.addFieldGroup = require('./addFieldGroup.service')
+module.exports.listFieldGroupService = require('./list.servicess')
+module.exports.listFieldGroup = require('./listFieldGroup.service')
+module.exports.updateFieldGroup = require('./updateFieldGroup.service')
+module.exports.getFieldGroup = require('./getFieldGroupById.service')
+module.exports.deleteFieldGroup = require('./deleteFieldGroup.service')

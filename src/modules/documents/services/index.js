@@ -1,0 +1,13 @@
+module.exports.addDocument = require('./addDocument.service')
+module.exports.updateDocument = require('./updateDocuments.service')
+module.exports.documentList = require('./list.services')
+module.exports.documentListWithoutLimit = require('./documentListwithoutLimit.services')
+module.exports.documentById = require('./getDocumentById.services')
+module.exports.getPrediction = require('./getPrediction.service')
+module.exports.updateField = require('./updateField.service')
+module.exports.deleteField = require('./deleteField.service')
+module.exports.processExtractedFields = require("./processExtractedFields.service");
+module.exports.deleteDocumentById = require("./deleteDocument.services")
+module.exports.deleteDocumentByMail = require("./deleteDocumentByMail")
+module.exports.assignToUser = require("./updateAssignToUser.service")
+module.exports.allowSync = require("./allowSync.service")

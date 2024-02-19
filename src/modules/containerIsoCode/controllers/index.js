@@ -1,0 +1,6 @@
+module.exports.addIsoCodes = require("./addIsoCodes.controller")
+module.exports.listController = require("./list.controller")
+module.exports.isoCodelistWithLimit = require("./isoCodeListLimit.controller")
+module.exports.getByIdIsoCodes = require("./getByIdIsoCodes.controller")
+module.exports.updateIsoCodes = require("./update.controller")
+module.exports.deleteIsoCode = require("./deleteIsoCodes.controller")

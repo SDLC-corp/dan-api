@@ -1,0 +1,5 @@
+module.exports.addLogicController = require('./addLogic.controller')
+module.exports.listLogicController = require('./listLogic.controller')
+module.exports.updateLogicController = require('./update.controller')
+module.exports.getLogicController = require('./getById.controller')
+module.exports.deleteLogicController = require('./delete.controller')

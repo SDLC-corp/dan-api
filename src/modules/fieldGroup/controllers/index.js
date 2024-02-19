@@ -1,0 +1,6 @@
+module.exports.addFieldGroupController = require('./addFieldGroup.controller')
+module.exports.listFieldGroupController = require('./list.controller')
+module.exports.listFieldGroup = require('./listFieldGroup.controller')
+module.exports.updateFieldGroup = require('./updateFieldGroup.controller')
+module.exports.getFieldGroupById = require('./getFieldGroupById.controller')
+module.exports.deleteFieldGroup = require('./deleteFieldGroup.controller')

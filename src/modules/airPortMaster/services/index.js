@@ -1,0 +1,6 @@
+module.exports.addPortMaster = require('./addAirPortMaster.service')
+module.exports.getPortMasterById = require('./service.getById')
+module.exports.updatePortMaster = require('./update.service')
+module.exports.portMaster = require('./service.getAllAirPortMaster')
+module.exports.portMasterList = require('./list.service')
+module.exports.deletePortMaster = require("./delete.service")

@@ -1,0 +1,1 @@
+module.exports.moduleList = require('./getModule.service')

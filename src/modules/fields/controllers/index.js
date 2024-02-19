@@ -1,0 +1,5 @@
+module.exports.addFieldController = require('./addFields.controller')
+module.exports.getByIdController = require('./getById.controller')
+module.exports.listFieldsController = require('./list.controller')
+module.exports.updateFieldsController = require('./update.controller')
+module.exports.deleteFieldsController = require('./deleteFields.controller')

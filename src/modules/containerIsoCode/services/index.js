@@ -1,0 +1,6 @@
+module.exports.addIsoCodes = require('./addIsoCodes.service')
+module.exports.isoCodesList = require('./list.service')
+module.exports.isoCodeListLimit = require('./isoCodeListLimit.service')
+module.exports.getById = require('./getById.services')
+module.exports.updateIsoCode = require('./update.services')
+module.exports.deleteContainerISOCode = require('./deleteISOCodes.service')

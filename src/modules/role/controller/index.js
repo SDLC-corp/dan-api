@@ -1,0 +1,6 @@
+module.exports.addRoleController = require('./addRole.controller')
+module.exports.listRoleController = require('./listRole.controller')
+module.exports.listRoleWithoutLimitController = require('./listRoleWithoutLimit.controller')
+module.exports.updateRoleController = require('./update.controller')
+module.exports.getRoleController = require('./getById.controller')
+module.exports.deleteRoleController = require('./delete.controller')

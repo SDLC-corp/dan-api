@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+    options {
+        skipStagesAfterUnstable()
+        disableRestartFromStage()
+    }
+    tools {
+        nodejs "nodejs"
+    }
+    stages {
+         stage('Logs') {
+            environment {
+                TWRPA_API_QA_IP = credentials("TWRPA_API_QA_IP")
+            }
+            steps {
+                withCredentials([
+                    sshUserPrivateKey(credentialsId: "jenkins-ssl", keyFileVariable: 'sshkey')
+                ]) {
+                    echo 'deploying the software'
+                    sh '''#!/bin/bash
+                        ssh -i $sshkey deployer@${TWRPA_API_QA_IP} "pm2 logs"
+                    '''
+                }
+            }
+        }
+    }
+}

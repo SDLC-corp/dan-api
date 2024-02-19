@@ -1,0 +1,6 @@
+module.exports.addLabelController = require('./addLabel.controller')
+module.exports.getByIdController = require('./getById.controller')
+module.exports.listLabelsController = require('./list.controller')
+module.exports.updateLabelsController = require('./update.controller')
+module.exports.generateMatrix = require('./matrix.controller')
+module.exports.deleteLabelsController = require('./delete.controller')
