@@ -16,14 +16,6 @@ const register = {
       "string.empty": `First name must contain value`,
       "any.required": `First name is a required field`
     }),
-    domain: Joi.array().required().messages({
-      "string.empty": `Domain must contain value`,
-      "any.required": `Domain is a required field`
-    }),
-    approvalDomain: Joi.array().required().messages({
-      "string.empty": `Approval Domain must contain value`,
-      "any.required": `Approval Domain is a required field`
-    }),
     profilePic: Joi.string().allow(''),
     roleId: Joi.string().allow(''),
   }),

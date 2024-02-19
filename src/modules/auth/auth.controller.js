@@ -12,8 +12,6 @@ const register = catchAsync(async (req, res) => {
     email,
     password,
     name,
-    domain,
-    approvalDomain,
     profilePic,
     role,
     roleId
@@ -21,9 +19,7 @@ const register = catchAsync(async (req, res) => {
     "email",
     "password",
     "name",
-    "domain",
     "profilePic",
-    "approvalDomain",
     "role",
     "roleId"
   ]);
@@ -37,8 +33,6 @@ const register = catchAsync(async (req, res) => {
     email,
     password,
     name,
-    domain,
-    approvalDomain,
     roleId,
     profilePic,role
   }

@@ -9,18 +9,12 @@ const applicationModulesRoute = require('./applicationModules.route');
 const fieldsRoute = require('./fields.route');
 const fieldGroupRoute = require('./fieldGroup.route');
 const documentsRoute = require('./document.route');
-const domainRoute = require('./domain.route');
-const shippingLinesRoute = require('./shippingLines.route');
+const documentTypesRoute = require('./documentType.route');
 const docsRoute = require('./docs.route');
-const jobRoute = require('./jobs.route');
 const dashboardAnalysisRoute = require('./dashboardAnalysis.route');
 const documentNotesRoute = require('./documentNotes.route');
-const portMasterRoute = require('./portmaster.route');
-const airPortMasterRoute = require('./airPortMaster.route');
-const approvedDocument = require('./approvedDocument.route');
-const containerIsoCodesRoute = require('./containerIsoCodes.route');
 const { uploadFile } = require('../../utils/fileUpload');
-const router = express.Router();
+const router = express.Router();  
 
 const defaultRoutes = [
   {
@@ -32,8 +26,8 @@ const defaultRoutes = [
     route: usersRoute,
   },
   {
-    path: '/shipping-lines',
-    route: shippingLinesRoute,
+    path: '/document-type',
+    route: documentTypesRoute,
   },
   {
     path: '/fields',
@@ -64,36 +58,12 @@ const defaultRoutes = [
     route: documentsRoute,
   },
   {
-    path: '/domain',
-    route: domainRoute,
-  },
-  {
-    path: '/job',
-    route: jobRoute,
-  },
-  {
     path: '/dashboardAnalysis',
     route: dashboardAnalysisRoute,
   },
   {
     path: '/documentnotes',
     route: documentNotesRoute,
-  },
-  {
-    path: '/portmaster',
-    route: portMasterRoute
-  },
-  {
-    path: '/air-portmaster',
-    route: airPortMasterRoute
-  },
-  {
-    path: '/isoCodes',
-    route: containerIsoCodesRoute
-  },
-  {
-    path: '/approved',
-    route: approvedDocument
   },
 ];
 

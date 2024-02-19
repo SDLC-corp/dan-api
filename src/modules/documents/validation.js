@@ -6,22 +6,14 @@ const {
 
 const addValidation = {
   body: Joi.object().keys({
-    shippingLineId: Joi.string().required().messages({
-      "string.empty": `Shipping Line is required`,
-      "any.required": `Shipping Line is required`,
+    documentTypeId: Joi.string().required().messages({
+      "string.empty": `Document Type Id is required`,
+      "any.required": `Document Type Id is required`,
     }),
     documentUrl: Joi.string().required().messages({
       "string.empty": `Document Url is required`,
       "any.required": `Document Url is required`,
     }),
-    documentNo: Joi.string().required().messages({
-      "string.empty": `Document Number is required`,
-      "any.required": `Document Number is required`,
-    }),
-    domainName: Joi.string().allow("").allow(null),
-    documentType: Joi.string().allow("").allow(null),
-    stageType: Joi.string().allow("").allow(null),
-    bookingNo: Joi.string().allow("").allow(null)
   }),
 };
 

@@ -1,7 +1,0 @@
-module.exports.addController = require("./addShippingLine.controller")
-module.exports.listController = require("./list.controller")
-module.exports.shippingLineListWithoutLimit = require("./shippingLineList.controller")
-module.exports.updateController = require("./update.controller")
-module.exports.getById = require("./getSingle.controller")
-module.exports.deleteShippingLine= require("./deleteShippingLine.controller")
-module.exports.extractAllShippingLine= require("./extractAll.controller")

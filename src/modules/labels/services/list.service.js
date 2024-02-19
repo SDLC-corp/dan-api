@@ -11,7 +11,7 @@ const fieldsList = async ({ limit = 10, page = 0 }, search) => {
   const skip = (start - 1) * limit;
   let filterQuery = { $and: [{ active: true }] };
 
-  if (search?.shippingLineId) { filterQuery.$and.push({ shippingLineId: mongoose.Types.ObjectId(search?.shippingLineId) }) }
+  if (search?.documentTypeId) { filterQuery.$and.push({ documentTypeId: mongoose.Types.ObjectId(search?.documentTypeId) }) }
   
   if (search?.name && search?.name != "") {
     var searchRegex = new RegExp(`.*${search?.name}.*`, "i")
@@ -25,10 +25,10 @@ const fieldsList = async ({ limit = 10, page = 0 }, search) => {
     },
     {
       $lookup: {
-        from: "shippinglines",
-        localField: "shippingLineId",
+        from: "documenttypes",
+        localField: "documentTypeId",
         foreignField: "_id",
-        as: "shippingLine",
+        as: "documentType",
       },
     },
     {
@@ -49,7 +49,7 @@ const fieldsList = async ({ limit = 10, page = 0 }, search) => {
     },
     {
       $unwind: {
-        path: "$shippingLine",
+        path: "$documentType",
         preserveNullAndEmptyArrays: true,
       },
     },
@@ -68,17 +68,17 @@ const fieldsList = async ({ limit = 10, page = 0 }, search) => {
     {
       $project: {
         label: 1,
-        shippingLineId: 1,
+        documentTypeId: 1,
         fieldId: 1,
         logicCodeId: 1,
         "field._id": 1,
         "field.displayName": 1,
         "field.paramName": 1,
         "field.seqId": 1,
-        "shippingLine.name": 1,
-        "shippingLine.modelId": 1,
-        "shippingLine.description": 1,
-        "shippingLine.logo": 1,
+        "documentType.name": 1,
+        "documentType.modelId": 1,
+        "documentType.description": 1,
+        "documentType.logo": 1,
         "logic._id": 1,
         "logic.shortCode": 1,
         "logic.textArea": 1

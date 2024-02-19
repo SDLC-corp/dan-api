@@ -1,6 +1,6 @@
 const fetch = require("node-fetch");
 const base64 = require("base-64");
-const { ORDER_RELEASES_ORDER_TYPE } = require("../modules/OTMJobProcess/services_push_Otm/const");
+// const { ORDER_RELEASES_ORDER_TYPE } = require("../modules/OTMJobProcess/services_push_Otm/const");
 
 const username = process.env.OTM_API_USERNAME;
 const password = process.env.OTM_API_PASSWORD;
@@ -688,9 +688,9 @@ async function markNoOtmSuccessFlagAPI({orderType, domainName, documentNo, paylo
 }
 async function getRefnumQaulListByQualGid({orderType, domainName, documentNo, obRefnumQualGid}) {
   let url = `${OTM_API_BASE_URL}/${orderType}/${domainName}.${documentNo}/refnums?q= obRefnumQualGid ew "${obRefnumQualGid}"`
-  if(orderType === ORDER_RELEASES_ORDER_TYPE) {
-    url = `${OTM_API_BASE_URL}/${orderType}/${domainName}.${documentNo}/refnums?q= orderReleaseRefnumQualGid ew "${obRefnumQualGid}"`
-  }
+  // if(orderType === ORDER_RELEASES_ORDER_TYPE) {
+  //   url = `${OTM_API_BASE_URL}/${orderType}/${domainName}.${documentNo}/refnums?q= orderReleaseRefnumQualGid ew "${obRefnumQualGid}"`
+  // }
   const _options = getOptions("GET")
   try {
     let res = await fetch(url, _options)

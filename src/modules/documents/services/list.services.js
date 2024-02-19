@@ -1,5 +1,4 @@
 const Model = require('../documents.model')
-const JoB = require('../../OTMJobProcess/OTMJobProcess.model')
 const mongoose = require('mongoose');
 const ApiError = require('../../../utils/ApiError');
 const httpStatus = require('http-status');
@@ -122,14 +121,6 @@ const list = async ({ limit = 100, page = 0 }, filter, loggedInUser) => {
         },
         {
             $lookup: {
-                from: "shippinglines",
-                localField: "shippingLineId",
-                foreignField: "_id",
-                as: "shippingLine",
-            },
-        },
-        {
-            $lookup: {
                 from: "users",
                 localField: "createdBy",
                 foreignField: "_id",
@@ -138,16 +129,10 @@ const list = async ({ limit = 100, page = 0 }, filter, loggedInUser) => {
         },
         {
             $lookup: {
-                from: "users",
-                localField: "assignTo",
+                from: "documenttypes",
+                localField: "documentTypeId",
                 foreignField: "_id",
-                as: "assignToUser",
-            },
-        },
-        {
-            $unwind: {
-                path: "$shippingLine",
-                preserveNullAndEmptyArrays: true,
+                as: "documentType",
             },
         },
         {
@@ -158,34 +143,23 @@ const list = async ({ limit = 100, page = 0 }, filter, loggedInUser) => {
         },
         {
             $unwind: {
-                path: "$assignToUser",
+                path: "$documentType",
                 preserveNullAndEmptyArrays: true,
             },
         },
         {
             $project: {
-                domainName: 1,
-                shippingLineId: 1,
+                documentTypeId: 1,
                 documentUrl: 1,
                 documentNo: 1,
-                bookingNo: 1,
-                documentType: 1,
                 document: 1,
                 createdBy: 1,
-                isJobDone: 1,
                 createdAt: 1,
                 seqId: 1,
-                stageType:1,
-                orderTypeGid: 1,
                 fieldsAndValues: 1,
-                "shippingLine.name": 1,
-                "shippingLine.code": 1,
-                "shippingLine._id": 1,
+                "documentType.code": 1,
+                "documentType.name": 1,
                 "user.name": 1,
-                "assignToUser.name": 1,
-                "assignToUser._id": 1,
-                syncWithOtm: 1,
-                lastSyncTime: 1,
             },
         },
     ];
@@ -197,24 +171,6 @@ const list = async ({ limit = 100, page = 0 }, filter, loggedInUser) => {
         .sort({ _id: -1 })
         .skip(skip)
         .limit(Number(limit));
-
-       for (let idx = 0; idx < list.length; idx++) {
-        const doc = list[idx];
-        let errorCount = 0
-        const job = await JoB.findOne({documentId: doc._id, active: true})
-        if(job) {
-            const statusData = job.status
-            for (const key in statusData) {
-                for (const key2 in statusData[key]) {
-                    const statusValue = statusData[key][key2].status;
-                    if (Number(statusValue) !== 1 && (statusValue || statusValue === 0)) {
-                        errorCount++
-                    }
-                }
-            } 
-        }
-     doc.errorCount = errorCount
-   }
 
 
     const totalCount = await Model.countDocuments(filterQuery)

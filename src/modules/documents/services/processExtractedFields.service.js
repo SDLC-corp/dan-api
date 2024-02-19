@@ -1,36 +1,20 @@
 const mongoose = require('mongoose');
 const Model = require('../documents.model');
-const FieldModel = require("../../fields/fields.model");
 const LabelsModel = require("../../labels/labels.model");
 const LogicModal = require('../../logic/logic.model')
-const ContainerISOModal = require('../../containerIsoCode/isoCodes.model')
-const ShippingModel = require("../../shippingLine/shippingLine.model");
+const DocumentTypeModel = require("../../documentTypes/documentType.model");
 var safeEval = require('safe-eval');
-const getAllPortMaster = require('../../portMaster/services/service.getAllPortMaster');
-const { getCountryCodeByAddress, getContainerListAPI } = require('../../../utils/otmApiHelper');
-const ApiError = require('../../../utils/ApiError');
-const httpStatus = require('http-status');
 
 async function processExtractedFields(documentId, clearOverrideValues) {
-
-   
     const document = await Model.findById(documentId)
-    let orderType = document.orderType
-    let domainName = document.domainName
-    let documentNo = document.documentNo
-    // transportHandlingUnitGid
+    let documentTypeId = document.documentTypeId
 
-    // if (userData.role == "documentation" && (userData._id?.toString() != document?.assignTo?.toString())) {
-    //     throw new ApiError(httpStatus.UNAUTHORIZED, "You do not have authorization to access this document", {}, "")
-    // }
+    const documentTypeDetails = await DocumentTypeModel.findById(documentTypeId);
 
-    const shippingLineDetails = await ShippingModel.findById(mongoose.Types.ObjectId(document.shippingLineId));
-
-    const portMasterArr = await getAllPortMaster(shippingLineDetails.type)
-
+    const portMasterArr = []
     const aggregateQuery = [
         {
-            "$match": { active: true, shippingLineId: mongoose.Types.ObjectId(document.shippingLineId) }
+            "$match": { active: true, documentTypeId: mongoose.Types.ObjectId(documentTypeDetails._id)}
         },
         {
             "$lookup": {
@@ -61,7 +45,7 @@ async function processExtractedFields(documentId, clearOverrideValues) {
             }
         } , {
             $project: {
-                shippingLineId: 1,
+                documentTypeId: 1,
                 label: 1,
                 isOverride: 1,
                 overrideCustomLogic: 1,
@@ -81,24 +65,21 @@ async function processExtractedFields(documentId, clearOverrideValues) {
     ]
     const labels = await LabelsModel.aggregate(aggregateQuery).sort({ "field.index": 1 });
     const confidenceLogic = await LogicModal.findOne({shortCode:'EXTRACT_CONFIDENCE'})
-    const containerCodes = await ContainerISOModal.find({active:true})
     let fieldsAndValues = [];
-    let master_container_type = containerCodes?.map(item=>({text :item.text,code:item.code}))
 
     // reverting for temp as not able to fetch
     // let otmContainerList = await getContainerListAPI({ orderType, domainName, documentNo });
     // let arr = otmContainerList?.map(item => ({ text: item.transportHandlingUnitGid, code: item.transportHandlingUnitGid }));
-
     for (let i = 0; i < labels.length; i++) {
         const aLabel = labels[i];
         let fieldName = aLabel.field.paramName
         let displayName = aLabel.label
         let fieldType = aLabel.field.fieldType
-        let isCountryCodeField = false
+        // let isCountryCodeField = false
 
-        if(fieldType == "master") {
-            isCountryCodeField = aLabel.field?.master.collectionName == "countryCode"
-        }
+        // if(fieldType == "master") {
+        //     isCountryCodeField = aLabel.field?.master.collectionName == "countryCode"
+        // }
 
         var context = {
             document: document,
@@ -106,8 +87,7 @@ async function processExtractedFields(documentId, clearOverrideValues) {
             fieldName:fieldName,
             portMasterArr: portMasterArr,
             allFields: labels,
-            master_container_type: master_container_type,
-            shippingLineDetails: shippingLineDetails,
+            documentTypeDetails: documentTypeDetails,
             log: function (...str) { console.log(...str) }
         }
 
@@ -136,17 +116,17 @@ async function processExtractedFields(documentId, clearOverrideValues) {
             }
         }
 
-        if(isCountryCodeField){
-            // console.log("--------------------------- Found country_code---------------------------",
-            //  fieldType, fieldName, fieldValue);
-            if(fieldValue){
-                try {
-                    fieldValue = await getCountryCodeByAddress(fieldValue)
-                } catch (error) {
-                    fieldValue = ""
-                }
-            } 
-        }
+        // if(isCountryCodeField){
+        //     // console.log("--------------------------- Found country_code---------------------------",
+        //     //  fieldType, fieldName, fieldValue);
+        //     if(fieldValue){
+        //         try {
+        //             fieldValue = await getCountryCodeByAddress(fieldValue)
+        //         } catch (error) {
+        //             fieldValue = ""
+        //         }
+        //     } 
+        // }
 
         if (fieldType === "table") {
             let containerType_arr = []
@@ -157,7 +137,7 @@ async function processExtractedFields(documentId, clearOverrideValues) {
 
             fieldsAndValues.push({
                 fieldName, displayName, fieldType, fieldValue,
-                confidence, field: aLabel.field, overrideValue, master_container_type:getConvertedMasterContainerType(containerType_arr)
+                confidence, field: aLabel.field, overrideValue, 
             })
         }
         else{
@@ -180,20 +160,8 @@ async function processExtractedFields(documentId, clearOverrideValues) {
         }
     })
 
-    // console.log("processExtractedFields --- Done")
     return { fieldsAndValues }
-
 }
 
 module.exports = processExtractedFields
 
-function getConvertedMasterContainerType(arr) {
-    try {
-        let jsonObject = arr?.map(JSON.stringify);
-        let uniqueSet = new Set(jsonObject);
-        return Array.from(uniqueSet).map(JSON.parse);
-    } catch (error) {
-        console.log("getConvertedMasterContainerType Catch", error , arr);
-    }
-    return [];
-}

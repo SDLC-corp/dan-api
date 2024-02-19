@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Model = require("../documents.model");
-const OTMJobProcess = require("../../OTMJobProcess/OTMJobProcess.model");
+// const OTMJobProcess = require("../../OTMJobProcess/OTMJobProcess.model");
 const ApiError = require('../../../utils/ApiError');
 const httpStatus = require('http-status');
 
@@ -97,11 +97,11 @@ const getUserById = async ({docId,loggedInUser}) => {
             }
 
         result = result[0]
-        let jobs = await OTMJobProcess.findOne({documentId: result._id}).sort({_id: -1})
+        // let jobs = await OTMJobProcess.findOne({documentId: result._id}).sort({_id: -1})
 
-            if(jobs){
-                result.jobs = jobs._doc
-            }
+            // if(jobs){
+            //     result.jobs = jobs._doc
+            // }
             if (result) {
                 return result
             }else{

@@ -19,8 +19,8 @@ router.route('/list')
 router.route('/update-assign-to-user/:id')
     .post(auth("adminAccess"), validate(Validation.getSingleValidation), Controller.updateAssignToUserId
 )
-router.route('/allow-sync/:id')
-    .post(auth("adminAccess"), validate(Validation.getSingleValidation), Controller.allowSync)
+// router.route('/allow-sync/:id')
+//     .post(auth("adminAccess"), validate(Validation.getSingleValidation), Controller.allowSync)
 
 router.route('/:id')
     .get(auth("adminAccess"), validate(Validation.getSingleValidation), Controller.documentById)
@@ -37,7 +37,7 @@ router.route('/')
 
 
 
-router.route("/check/orderBases").get(Controller.checkOTMOrderBases);
+// router.route("/check/orderBases").get(Controller.checkOTMOrderBases);
 
 
 module.exports = router;

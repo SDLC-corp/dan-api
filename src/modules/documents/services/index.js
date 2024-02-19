@@ -10,4 +10,3 @@ module.exports.processExtractedFields = require("./processExtractedFields.servic
 module.exports.deleteDocumentById = require("./deleteDocument.services")
 module.exports.deleteDocumentByMail = require("./deleteDocumentByMail")
 module.exports.assignToUser = require("./updateAssignToUser.service")
-module.exports.allowSync = require("./allowSync.service")

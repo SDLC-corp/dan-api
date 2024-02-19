@@ -8,7 +8,7 @@ const modelSchema = mongoose.Schema(
       trim: true,
       required: true,
     },
-    shippingLineId: {
+    documentTypeId: {
       type: mongoose.Types.ObjectId,
       required: true,
     },

@@ -6,29 +6,17 @@ const service = require("../services");
 
 const add = catchAsync(async (req, res) => {
   const createdBy = req.user._id
-  let assignTo 
+  const assignTo = createdBy
   const { 
-    domainName,
-    shippingLineId,
+    documentTypeId,
     documentUrl,
-    bookingNo,
-    documentType,
-    stageType,
-    documentNo,assignToUserId } = await pick(req.body,
-     ['domainName', 'shippingLineId','documentUrl','documentType','stageType','documentNo', 'bookingNo',"assignToUserId",]);
+     } = await pick(req.body,[ "documentTypeId", "documentUrl"]);
 
-     console.log("req.params",req.query);
-    const {extractionType} = await pick(req.query,["extractionType"])
-    console.log("extractionType",extractionType);
-
-    if (req.user.role != "documentation" && assignToUserId) {
-        // admin
-        assignTo = assignToUserId
-    }else{
-        assignTo = createdBy
-    }
-
-  const list = await service.addDocument({ domainName, shippingLineId,documentUrl,documentType,stageType,documentNo,createdBy,assignTo, bookingNo,extractionType});
+  const list = await service.addDocument({ 
+    documentTypeId,
+    documentUrl,
+    assignTo,
+    createdBy});
   sendResponse(res, httpStatus.OK, list, null);
 });
 

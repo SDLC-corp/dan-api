@@ -1,12 +1,12 @@
 const Model = require("../labels.model");
 const FieldModel = require("../../fields/fields.model");
-const ShippingLines = require("../../shippingLine/shippingLine.model");
+const DocumentTypes = require("../../documentTypes/documentType.model");
 const generateMatrix = async ({ limit = 100, page = 0, search }) => {
     let filterQuery = { active: true };
     try {
     
       const fields = await FieldModel.find(filterQuery).sort({index:1});
-      const shippingLines = await ShippingLines.find(filterQuery);
+      const documentTypes = await DocumentTypes.find(filterQuery);
   
       const aggregateQuery = [
         { 
@@ -32,7 +32,7 @@ const generateMatrix = async ({ limit = 100, page = 0, search }) => {
       return {
           labels,
           fields,
-          shippingLines,
+          documentTypes,
       }
       
     } catch (error) {
@@ -41,7 +41,7 @@ const generateMatrix = async ({ limit = 100, page = 0, search }) => {
     return {
       labels: [],
       fields: [],
-      shippingLines: []
+      documentTypes: []
     }
   
 };

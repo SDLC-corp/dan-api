@@ -10,10 +10,10 @@ const getLabelById = async (id) => {
             },
             {
                 $lookup: {
-                    from: "shippinglines",
-                    localField: "shippingLineId",
+                    from: "documenttypes",
+                    localField: "documentTypeId",
                     foreignField: "_id",
-                    as: "shippingLine",
+                    as: "documentType",
                 },
             },
             {
@@ -42,7 +42,7 @@ const getLabelById = async (id) => {
             },
             {
                 $unwind: {
-                    path: "$shippingLine",
+                    path: "$documentType",
                     preserveNullAndEmptyArrays: true,
                 },
             },
@@ -67,7 +67,7 @@ const getLabelById = async (id) => {
             {
                 $project: {
                     label: 1,
-                    shippingLineId: 1,
+                    documentTypeId: 1,
                     fieldId: 1,
                     logicCodeId: 1,
                     isOverride: 1,
@@ -79,7 +79,7 @@ const getLabelById = async (id) => {
                     "logic.textArea": 1,
                     "field._id": 1,
                     "field.displayName": 1,
-                    "shippingLine.name": 1,
+                    "documentType.name": 1,
                     "logic._id": 1,
                 },
             },

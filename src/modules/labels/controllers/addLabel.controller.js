@@ -7,19 +7,19 @@ const service = require("../services");
 const add = catchAsync(async (req, res) => {
   const {
     label,
-    shippingLineId,
+    documentTypeId,
     fieldId,
     logicCodeId,
     isOverride,
     overrideCustomLogic
-  } = await pick(req.body, ['label', 'shippingLineId', 'fieldId', "logicCodeId", "isOverride", "overrideCustomLogic"]);
+  } = await pick(req.body, ['label', 'documentTypeId', 'fieldId', "logicCodeId", "isOverride", "overrideCustomLogic"]);
     let id = req.user._id
     const formattedDate = new Date().toISOString();
   let result = {}
   if (isOverride) {
     result = {
       label,
-      shippingLineId,
+      documentTypeId,
       fieldId,
       isOverride,
       overrideCustomLogic,
@@ -31,7 +31,7 @@ const add = catchAsync(async (req, res) => {
   } else {
     result = {
       label,
-      shippingLineId,
+      documentTypeId,
       fieldId,
       logicCodeId,
     //   isOverride,

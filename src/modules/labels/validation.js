@@ -11,9 +11,9 @@ const addValidation = {
       "string.empty": `label is required`,
       "any.required": `label is required`,
     }),
-    shippingLineId: Joi.custom(objectId).required().messages({
-      "string.empty": `shippingLineId is required`,
-      "any.required": `shippingLineId is required`,
+    documentTypeId: Joi.custom(objectId).required().messages({
+      "string.empty": `documentTypeId is required`,
+      "any.required": `documentTypeId is required`,
     }),
     fieldId: Joi.custom(objectId).required().messages({
       "string.empty": `fieldId is required`,

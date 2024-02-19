@@ -41,13 +41,6 @@ const userSchema = mongoose.Schema(
       },
       private: true, // used by the toJSON plugin
     },
-    domain: {
-      type: Array,
-      required: true,  
-    },
-    approvalDomain: {
-      type: Array
-    },
     role: {
       type: String,
       enum: roles,
@@ -64,7 +57,11 @@ const userSchema = mongoose.Schema(
     active:{
       type:Boolean,
       default:true
-    }
+    },
+    inActive:{
+      type:Boolean,
+      default:false
+    },
   },
   {
     timestamps: true,

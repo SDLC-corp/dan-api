@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const Model = require("../documents.model");
 const { SendMailAPI } = require('../../../utils/emailServices');
-const addApprovedDocument = require('../../approvedtodeletedocument/services/addApprovedDocumentServices');
 const User = require('../../user/user.model'); 
 
 const deleteDocumentByMail = async ({ id, loggedInUser }, domainName) => {
@@ -20,14 +19,10 @@ const deleteDocumentByMail = async ({ id, loggedInUser }, domainName) => {
         if (emailAddresses.length > 0) {
             const documentId = mongoose.Types.ObjectId(id);
             const getDocumentById = await Model.findOne(documentId);
-            let requestedBy = mongoose.Types.ObjectId(loggedInUser);
-            let approved = false;
 
             if (getDocumentById) {
                 const emailResult = await SendMailAPI(documentId, getDocumentById.documentNo, loggedInUser, recipients);
                 if (emailResult) {
-                    let addApprovedDocumentResult = await addApprovedDocument({ requestedBy, documentId, approved });
-                    // console.log("addApprovedDocument", addApprovedDocumentResult);
                     return { message: emailResult.message };
                 } else {
                     return { message: emailResult.error };

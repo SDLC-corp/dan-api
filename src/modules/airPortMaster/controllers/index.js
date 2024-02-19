@@ -1,7 +1,0 @@
-module.exports.addPostMaster = require("./addAirPortMasters.controller")
-module.exports.listController = require("./list.controller")
-module.exports.portMasterlistWithLimit = require("./airPortMasterListLimit.controller")
-module.exports.updateController = require("./update.controller")
-module.exports.getById = require("./getSingle.controller")
-module.exports.deletePortMaster= require("./deleteAirPortMasters.controller")
-module.exports.getSyncPortMaster= require("./getSyncAirPortMaster.controller")

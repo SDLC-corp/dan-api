@@ -3,17 +3,16 @@ const {
     DocumentAnalysisClient,
 } = require("@azure/ai-form-recognizer");
 const Model = require("../documents.model");
-const ShippingLineModel = require("../../shippingLine/shippingLine.model");
+const DocumentTypeModel = require("../../documentTypes/documentType.model");
 const ProcessExtracted = require("./processExtractedFields.service");
 
 async function formRecognizerExtractFields(documentData, clearOverrideValues) {
-    // isJobDone, isSuccess, error
     console.log("Extract Fields START ::");
 
     try {
-        const { documentUrl, shippingLineId } = documentData;
+        const { documentUrl, documentTypeId } = documentData;
 
-        let found = await ShippingLineModel.findById(shippingLineId);
+        const found = await DocumentTypeModel.findOne(documentTypeId);
 
         if (found && found.modelId) {
 
@@ -60,7 +59,7 @@ async function formRecognizerExtractFields(documentData, clearOverrideValues) {
             await ProcessExtracted(documentData._id, clearOverrideValues);
 
         } else {
-          throw new Error("Shipping Line not found or modelId not present : shippingLineId ::" + shippingLineId);
+          throw new Error("Document Type not found or modelId not present : documentTypeId ::" + documentTypeId);
         }
     } catch (error) {
         console.error("Extraction Error ::", error);

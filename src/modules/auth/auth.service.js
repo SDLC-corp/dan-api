@@ -29,25 +29,18 @@ const signup = async (userBody) => {
  */
 const loginUserWithEmailAndPassword = async (email, password) => {
 
-  let user = await User.findOne({ email, active: true }).exec();
+  let user = await User.findOneAndUpdate({ email, active: true },{lastLogin:new Date()}).exec();
 
   if (!user || !(await user.isPasswordMatch(password))) {
     throw new ApiError(httpStatus.FORBIDDEN, 'Incorrect email or password', false, false);
   }
-    let accessModules = await getAccessModulesFn(user)
-    // let accessModules = []
-    // if (user?.roleId) {
-    //     const roleResult = await Role.findOne({ _id :mongoose.Types.ObjectId(user?.roleId), active:true})
-    //     const allModule = await service.moduleList()
-    //     let disabledModules = roleResult?.disabledModules || []
-
-
-    //     accessModules = allModule?.filter(item=> !disabledModules?.includes(item.id))
-    //     accessModules = accessModules?.map(item=>item.id)
-    // }
+  if (user.inActive) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'This account is deactivated. Please contact your administrator for assistance.', false, false);
+  }
+    let {accessModules,roleName} = await getAccessModulesFn(user?.roleId)
     const userWithoutPassword = { ...user._doc };
     delete userWithoutPassword.password;
-    return {...userWithoutPassword,accessModules}
+    return {...userWithoutPassword,accessModules,roleName}
 };
 
 
@@ -96,35 +89,55 @@ const checkEmail = async (email) => {
  */
 const getCurrentUser = async (token) => {
   try {
-    const { user } = await tokenService.verifyToken(token, 'refresh');
+    const { user } = await tokenService.verifyToken(token, tokenTypes.REFRESH);
     const userData = await User.findOne({ _id: mongoose.Types.ObjectId(user), active: true });
-    let accessModules = await getAccessModulesFn(userData)
+    let {accessModules,roleName} = await getAccessModulesFn(userData?.roleId)
     const userDataWithoutPassword = { ...userData._doc };
     delete userDataWithoutPassword.password;
-    return { userData:{...userDataWithoutPassword,accessModules}, status: true, statusCode: 200 };
-    // return {...userDataWithoutPassword,accessModules}
+    return { userData:{...userDataWithoutPassword,accessModules,roleName}, status: true, statusCode: 200 };
   } catch (error) {
-    // throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'getCurrentUser failed');
+    console.log("--------------------- getCurrentUser ---------------------------", error);
     return { userData: null, profileData: null, isError: 'getCurrentUser failed', status: false, statusCode: 500 }
   }
 };
 
-    async function  getAccessModulesFn(userData) {
-        if (userData?.roleId) {
-            const roleResult = await Role.findOne({ _id :mongoose.Types.ObjectId(userData.roleId), active:true})
-            if (roleResult) {
-                const allModule = await service.moduleList()
-                let disabledModules = roleResult.disabledModules || []
-                /* TODO: remove  */
-                accessModules = allModule.filter(item=> !disabledModules.includes(item.id))
-                accessModules = accessModules.map(item=>item.id)  
-                return accessModules
-            }
-        }
+async function getAllAccessModulesForSuAdmin() {
+  let allModule = await service.moduleList()
+  allModule = allModule.map(item=>item.id)  
+  return { accessModules: allModule, roleName: 'superAdmin'}
+}
+
+/**
+ * Gets users access modules by role id
+ * @param {string} roleId ObjectID
+ * @returns {Promise}
+ */
+async function  getAccessModulesFn(roleId) {
+    try {
+        if (roleId) {
+          const roleResult = await Role.findOne({ _id :mongoose.Types.ObjectId(roleId), active:true})
+          if (roleResult) {
+              const allModule = await service.moduleList()
+              let disabledModules = roleResult.disabledModules || []
+              /* TODO: remove  */
+              accessModules = allModule.filter(item=> !disabledModules.includes(item.id))
+              accessModules = accessModules.map(item=>item.id)  
+              return { accessModules, roleName: roleResult.name} 
+          }else{
+            return {accessModules:["VIEW_DASHBOARD","MANAGE_DASHBOARD"],roleName:""}
+          }
+      }
+    } catch (error) {
+      console.error("getAccessModulesFn", error);
     }
+
+    return {accessModules:["VIEW_DASHBOARD","MANAGE_DASHBOARD"],roleName:""}
+}
 
 module.exports = {
   loginUserWithEmailAndPassword,
+  getAllAccessModulesForSuAdmin,
+  getAccessModulesFn,
   logout,
   refreshAuth,
   getCurrentUser,

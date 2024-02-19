@@ -1,8 +1,0 @@
-module.exports.addPortMaster = require('./addPortMaster.service')
-module.exports.getPortMasterById = require('./service.getById')
-module.exports.updatePortMaster = require('./update.service')
-module.exports.portMaster = require('./service.getAllPortMaster')
-module.exports.portMasterList = require('./list.service')
-module.exports.deletePortMaster = require("./delete.service")
-module.exports.listPortMasterControllerForCollectionName = require("./portMasterListForColllectionName")
-module.exports.getSyncPortMaster = require("./getSyncPortMaster.services")

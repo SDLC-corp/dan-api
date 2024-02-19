@@ -1,3 +1,4 @@
+const mongoose  = require('mongoose');
 const model = require('./../user.model')
 
 const usersList = async ({limit=100, page=0},search) => {
@@ -32,16 +33,10 @@ const usersList = async ({limit=100, page=0},search) => {
 		});
 	}
 
-	// if (search?.domainName && search?.domainName != "") {
-    //     filterQuery.$and.push({ domain: { $regex: search?.domainName, $options: "i" } })
-    // }
-    if (search?.domainName?.length) {
-        filterQuery.domain = { $in: search?.domainName };
+    if (search?.role) {
+        filterQuery.roleId = mongoose.Types.ObjectId(search?.role);
     }
 
-	if (search?.role && search?.role != "") {
-        filterQuery.$and.push({ role: { $regex: search?.role, $options: "i" } })
-    }
     const aggregateQuery = [
         {
             $match: filterQuery,

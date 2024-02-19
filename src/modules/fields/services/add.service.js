@@ -4,6 +4,7 @@ const Model = require("../fields.model")
 const Mongoose  = require("mongoose")
 
 async function add(data) {
+    console.log("data",data);
     let findQuery = {paramName: data.paramName, displayName: data.displayName}
     let paramNameQuery = {paramName: data.paramName}
     let displayNameQuery = {displayName: data.displayName}

@@ -1,54 +1,22 @@
 const mongoose = require("mongoose");
 const counterIncrementor = require("../../utils/counterIncrement");
-const { number, any, object } = require("joi");
+const { number, any, object, string } = require("joi");
 
 const modelSchema = mongoose.Schema(
   {
-    domainName: {
-      type: String,
-      trim: true,
-      default: "",
-    },
-    shippingLineId: {
+    documentTypeId: {
       type: mongoose.Types.ObjectId,
       required: true,
     },
     createdBy: {
       type: mongoose.Types.ObjectId,
     },
-    document: {
-      type: String,
-      default: "",
+    assignTo: {
+      type: mongoose.Types.ObjectId,
     },
     documentUrl: {
       type: String,
       required: true,
-    },
-    documentType: {
-      type: String,
-      default: "",
-    },
-    orderTypeGid: {
-      type: String,
-      default: "",
-    },
-    documentNo: {
-      type: String,
-      required: true,
-    },
-    bookingNo: {
-      type: String,
-      default: "",
-    },
-    orderType: {
-      type: String,
-      default: "",
-      enum: ["orderBases", "orderReleases", ""],
-    },
-    stageType: {
-      type: String,
-      default: "original",
-      enum: ["draft", "original"],
     },
     active: {
       type: Boolean,
@@ -76,16 +44,6 @@ const modelSchema = mongoose.Schema(
     error: {
       type: String,
       default: "",
-    },
-    syncWithOtm : {
-      type: Boolean,
-      default: false,
-    },
-    lastSyncTime: {
-      type: Date
-    },
-    assignTo: {
-      type: mongoose.Types.ObjectId,
     },
   },
   {

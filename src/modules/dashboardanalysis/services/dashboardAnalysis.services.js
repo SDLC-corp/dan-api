@@ -1,6 +1,4 @@
 const documentsModel = require("../../documents/documents.model")
-const shippingLineModel = require("../../shippingLine/shippingLine.model")
-const jobModel = require("../../OTMJobProcess/OTMJobProcess.model")
 const userModel = require("../../user/user.model")
 const mongoose = require('mongoose');
 
@@ -10,7 +8,7 @@ const mongoose = require('mongoose');
  * @returns {Promise<Series>}
  */
 
-const getDocumentAnalytics = async (loggedInUser, filter,domainName,shippingLine) => {
+const getDocumentAnalytics = async (loggedInUser, filter,shippingLine) => {
 
   let documentCount
   let shippingLineCounts
@@ -20,7 +18,6 @@ const getDocumentAnalytics = async (loggedInUser, filter,domainName,shippingLine
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
   let filterQuery = { $and: [{ active: true }] };
-  let shippingLineFilterQuery = { $and: [{ active: true }] };
   let mblFilterQuery = { $and: [{ active: true, documentType: 'MBL' }] };
   let hblFilterQuery = { $and: [{ active: true, documentType: 'HBL' }] };
   let syncWithOtmFilterQuery = { $and: [{ active: true, syncWithOtm: true }] };
@@ -84,7 +81,6 @@ $and: [{ active: true }]
         createdAt: 1,
         seqId: 1,
         "documentsdata.bookingNo": 1,
-        "documentsdata.domainName": 1,
         "documentsdata.documentNo": 1,
         "documentsdata.fieldsAndValues": 1,
         "userdata.name": 1,
@@ -193,31 +189,6 @@ $and: [{ active: true }]
       $sort: { shippingLineId: 1 }, // Sort by the "createdBy" field
     },
   ];
-  // show last 30 days Document uploaded By Shipping Line  
-
-  const documentCountByAllDomainNamesQuery = [
-    {
-      $match: documentAgregateQueryGraph,
-    },
-    {
-      $project: {
-        domainName: "$domainName",
-        active: 1,
-      },
-    },
-    {
-      $match: {
-        domainName: { $exists: true, $ne: null },
-        active: true,
-      },
-    },
-    {
-      $group: {
-        _id: "$domainName",
-        count: { $sum: 1 },
-      },
-    },
-  ];
 
 
   if (filter && filter?.createdAt ) {
@@ -244,38 +215,14 @@ $and: [{ active: true }]
     });
   }
 
-  if (domainName?.length >0) {
-    documentAgregateQueryGraph.$and.push({
-      domainName: { $in: domainName },
-    });
-    filterQuery.$and.push({
-      domainName: { $in: domainName },
-    });
-    mblFilterQuery.$and.push({
-      domainName: { $in: domainName },
-    });
-    hblFilterQuery.$and.push({
-      domainName: { $in: domainName },
-    });
-    syncWithOtmFilterQuery.$and.push({
-      domainName: { $in: domainName },
-    });
-    asyncWithOtmFilterQuery.$and.push({
-      domainName: { $in: domainName },
-    });
-    userQuery.$and.push({
-      domainName: { $in: domainName },
-    });
-  }
+
+  
 
   if (shippingLine?.length >0) {
 
   const shippingLineObjectIds = shippingLine.map(id =>  mongoose.Types.ObjectId(id));
     documentAgregateQueryGraph.$and.push({
       shippingLineId: { $in: shippingLineObjectIds },
-    });
-    shippingLineFilterQuery.$and.push({
-      _id: { $in: shippingLineObjectIds },
     });
     filterQuery.$and.push({
       shippingLineId: { $in: shippingLineObjectIds },
@@ -300,14 +247,8 @@ $and: [{ active: true }]
   try {
     documentCount = await documentsModel.countDocuments(filterQuery)
     
-    const domainCountResult = await documentsModel.aggregate(documentCountByAllDomainNamesQuery);
-    domainCount = domainCountResult.length;
-
-    const shippingLineCount = await shippingLineModel.countDocuments(shippingLineFilterQuery);
-    const jobCount = await jobModel.countDocuments(filterQuery);
-    const recentJobList = await jobModel.aggregate(aggregateQuery).limit(5).sort({ _id: -1 });
     let userCount
-    if (filter || shippingLine?.length || domainName?.length) {
+    if (filter || shippingLine?.length ) {
         let userCountArray = await documentsModel.aggregate(documentUploadedByUserAgregateQuery);
         userCount = userCountArray.length
     }else{
@@ -332,7 +273,6 @@ $and: [{ active: true }]
         return result;
       }
     });
-  const documentUploadedByDomainName = await documentsModel.aggregate(documentCountByAllDomainNamesQuery);
   let documentUploadedByShippingLine = await documentsModel.aggregate(documentUploadedByShippingLineAgregateQuery, (err, result) => {
       if (err) {
         console.error(err);
@@ -346,13 +286,11 @@ $and: [{ active: true }]
         documentsCount: documentCount, 
         shippingLineCounts:shippingLineCounts,
         domainCount:domainCount,
-        shippingLineCount: shippingLineCount,
-        jobCount: jobCount, userCount: userCount, jobList: recentJobList,
+        userCount: userCount,
         lastThirtyDaysUploadedDocumentCount: lastThirtyDaysUploadedDocumentCount,
         mblDocumentTypeCount: mblDocumentTypeCount, hblDocumentTypeCount: hblDocumentTypeCount,
         asyncWithOtmDocumentCount: asyncWithOtmDocumentCount, syncWithOtmDocumentCount: syncWithOtmDocumentCount,
         documentUploadedByUser: documentUploadedByUser,documentUploadedByShippingLine:documentUploadedByShippingLine
-        ,documentUploadedByDomainName:documentUploadedByDomainName
       },
       status: true, code: 200
     }

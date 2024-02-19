@@ -1,7 +1,0 @@
-module.exports.addShippingLine = require('./addShippingLine.service')
-module.exports.getShippingLineById = require('./service.getById')
-module.exports.updateShippingLine = require('./update.service')
-module.exports.shippingLineList = require('./list.service')
-module.exports.shippingLineListWithoutLimit = require("./shippingLine.services")
-module.exports.deleteShippingLine = require("./delete.service")
-module.exports.extractAllShippingLine = require("./extractAll.service")
