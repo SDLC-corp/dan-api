@@ -34,8 +34,8 @@ const list = async ({ limit = 100, page = 0 }, filter, loggedInUser) => {
 
     if (filter?.shippingLineId && filter?.shippingLineId != "") { filterQuery.$and.push({ shippingLineId: mongoose.Types.ObjectId(filter?.shippingLineId) }) }
 
-    if (filter?.documentType) {
-        filterQuery.$and.push({ documentType: { $regex: filter?.documentType, $options: "i" } })
+    if (filter?.documentTypeId) {
+        filterQuery.$and.push({ documentTypeId: mongoose.Types.ObjectId(filter?.documentTypeId) })
     }
    
     if (filter?.domainName?.length) {
