@@ -6,8 +6,9 @@ const service = require("../services");
 const ApiError = require("../../../utils/ApiError");
 
 const list = catchAsync(async (req, res) => {
-   
-    const list = await service.listFieldGroupService();
+    const { ordId } = await pick(req.user._doc, ['ordId']);
+
+    const list = await service.listFieldGroupService({ordId});
     if (list) {
         sendResponse(res, httpStatus.OK, list, null);
     }else{

@@ -6,8 +6,9 @@ const service = require("../services");
 
 const add = catchAsync(async (req, res) => {
   const { id } = await pick(req.params, ['id']);
+  const {ordId} = await pick(req.user._doc, ['ordId']);
 
-  const list = await service.deleteFieldGroup(id);
+  const list = await service.deleteFieldGroup({id,ordId});
   sendResponse(res, httpStatus.OK, list, null);
 });
 

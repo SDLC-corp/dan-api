@@ -1,8 +1,9 @@
+const mongoose  = require("mongoose");
 const Model = require("../fieldGroups.model");
 
-const listAll = async () => {
+const listAll = async ({ordId}) => {
 
-    let filterQuery = { active: true };
+    let filterQuery = { active: true, ordId: mongoose.Types.ObjectId(ordId)};
     const list = await Model.find(filterQuery)
         .sort({ _id: -1 })
 

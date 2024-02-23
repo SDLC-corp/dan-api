@@ -9,8 +9,6 @@ const deleteDocument = async ({ id,orgId }) => {
 
         const foundDoc = await Model.findOne({_id:documentId,orgId})
 
-        console.log("foundDoc",foundDoc);
-
         if (!foundDoc) {
             return false
         }
