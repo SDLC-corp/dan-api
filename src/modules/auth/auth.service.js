@@ -175,10 +175,10 @@ const verifyRegistration = async ({ token, otp }) => {
       return token
 
     } else {
-      throw new ApiError(httpStatus.UNAUTHORIZED, "OTP Expired!", false);
+      throw new ApiError(httpStatus.BAD_GATEWAY, "OTP Expired!", false);
     }
   } else {
-    throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid OTP Entered!", false);
+    throw new ApiError(httpStatus.BAD_GATEWAY, "Invalid OTP Entered!", false);
   }
 
 }
@@ -218,7 +218,7 @@ const registration = async ({ token, password }) => {
       }
 
     } else {
-      throw new ApiError(httpStatus.UNAUTHORIZED, "Password setup has expired. Please attempt the process again.", false);
+      throw new ApiError(httpStatus.BAD_GATEWAY, "Password setup has expired. Please attempt the process again.", false);
     }
 
   } else {
