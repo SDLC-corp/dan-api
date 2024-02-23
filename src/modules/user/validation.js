@@ -18,6 +18,7 @@ const register = {
     }),
     profilePic: Joi.string(),
     roleId:Joi.string().allow(''),
+    orgId:Joi.string().allow(null),
     role:Joi.string().allow('')
   }),
 };
@@ -28,7 +29,8 @@ const update = {
       "any.required": `First name is a required field`
     }),
     profilePic: Joi.string().allow(''),
-    roleId:Joi.string().allow('')
+    roleId:Joi.string().allow(''),
+    orgId:Joi.string().allow(null),
   }),
 };
 

@@ -4,8 +4,6 @@ const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('../../plugins');
 const { roles } = require('../../config/roles');
 const counterIncrementor = require('../../utils/counterIncrement');
-const { string } = require('joi');
-const { objectId } = require('../../validations/custom.validation');
 
 const userSchema = mongoose.Schema(
   {
@@ -46,21 +44,29 @@ const userSchema = mongoose.Schema(
       enum: roles,
       required: true,
       default: 'admin',
-  
+
     },
-    roleId:{
-        type:mongoose.Types.ObjectId
+    roleId: {
+      type: mongoose.Types.ObjectId
     },
-    seqId:{
-      type:Number
+    orgId: {
+      type: mongoose.Types.ObjectId,
+      required: true,
     },
-    active:{
-      type:Boolean,
-      default:true
+    emailVerified: {
+      type: Boolean,
+      default: false
     },
-    inActive:{
-      type:Boolean,
-      default:false
+    seqId: {
+      type: Number
+    },
+    active: {
+      type: Boolean,
+      default: true
+    },
+    inActive: {
+      type: Boolean,
+      default: false
     },
   },
   {

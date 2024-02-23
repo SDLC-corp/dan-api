@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const { password,emailCustom } = require('../../validations/custom.validation');
+const { password,emailCustom,objectId } = require('../../validations/custom.validation');
 
 const register = {
   body: Joi.object().keys({
@@ -85,6 +85,59 @@ const socialLogin = {
   }),
 };
 
+const addRegistrationProcessValidation = {
+  body: Joi.object().keys({
+
+      name: Joi.string().required().messages({
+          "string.empty": `First name must contain value`,
+          "any.required": `First name is a required field`
+      }),
+      email: Joi.string().required().email().messages({
+          "string.empty": `Email must contain value`,
+          "any.required": `Email is a required field`,
+          "string.email": `Email must be valid mail`,
+      }),
+      orgName: Joi.string().required().messages({
+          "string.empty": `Organization Name must contain value`,
+          "any.required": `Organization Name is a required field`
+      }),
+      website: Joi.alternatives().try(
+          Joi.string().uri({ scheme: ['http', 'https'] }),
+          Joi.string().pattern(new RegExp('^(?:www\\.)?[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}$'))
+      ).required().messages({
+          "string.empty": `Website must contain value`,
+          "any.required": `Website is a required field`,
+          "string.uri": `Website must be a valid URI`,
+          "alternatives.types": `Website must be a valid URL or a valid hostname`,
+      }),
+  }),
+};
+
+const verifyRegistration = {
+  body: Joi.object().keys({
+    token: Joi.string().required(),
+    otp: Joi.number().required()
+  }),
+};
+
+
+const getRegistrationProcessValidation = {
+  param: Joi.object().keys({
+    id: Joi.custom(objectId).required(),
+  }),
+};
+
+const registrationValidation = {
+  body: Joi.object().keys({
+    token: Joi.string().required(),
+    password: Joi.string().required().custom(password).messages({
+      "string.empty": `Password must contain value`,
+      "any.required": `Password is a required field`
+    }),
+  }),
+};
+
+
 module.exports = {
   register,
   login,
@@ -92,5 +145,9 @@ module.exports = {
   resetPasswordValidation,
   adminLogin,
   socialLogin,
-  signup
+  signup,
+  addRegistrationProcessValidation,
+  verifyRegistration,
+  getRegistrationProcessValidation,
+  registrationValidation
 };

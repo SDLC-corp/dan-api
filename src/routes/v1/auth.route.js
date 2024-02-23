@@ -3,14 +3,23 @@ const validate = require('../../middlewares/validate');
 const authValidation = require('../../modules/auth/auth.validation');
 const authController = require('../../modules/auth/auth.controller');
 const auth = require('../../middlewares/auth');
-
 const router = express.Router();
+const registerRouter = express.Router();
 
-router.post('/register', validate(authValidation.register), authController.register);
 router.post('/login', validate(authValidation.login), authController.login);
 router.post('/logout', validate(authValidation.logout), authController.logout);
 router.post('/getCurrentUser', authController.getCurrentUser);
-router.post('/refresh-token', authController.refreshTokens)
+router.post('/refresh-token', authController.refreshTokens);
+
+/**
+ * Register Routes: 
+*/
+registerRouter.post('/', auth('adminAccess'),validate(authValidation.register), authController.register);
+registerRouter.post('/send-otp', validate(authValidation.addRegistrationProcessValidation), authController.addRegistrationProcess)
+registerRouter.post('/verify-otp', validate(authValidation.verifyRegistration), authController.verifyRegistration)
+registerRouter.post('/set-password', validate(authValidation.registrationValidation), authController.registration);
+router.use('/register', registerRouter)
+
 module.exports = router;
 
 /**
