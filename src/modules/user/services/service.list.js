@@ -1,9 +1,9 @@
 const mongoose  = require('mongoose');
 const model = require('./../user.model')
 
-const usersList = async ({limit=100, page=0},search) => {
+const usersList = async ({limit=100, page=0, orgId},search) => {
 
-	let filterQuery = { $and: [{ active: true,role: {$ne: "superAdmin"}}] };
+	let filterQuery = { $and: [{ active: true,role: {$ne: "superAdmin"}, orgId : mongoose.Types.ObjectId(orgId)}] };
 
 	const length = limit && parseInt(limit, 10) > 0 ? parseInt(limit, 10) : 10;
 	const start = page && parseInt(page, 10) > 0 ? parseInt(page, 10) : 1;

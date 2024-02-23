@@ -1,8 +1,9 @@
+const mongoose  = require("mongoose");
 const Model = require("../role.model");
 
-const RoleList = async () => {
+const roleList = async ({ orgId }) => {
 
-	let filterQuery = { $and: [{ active: true }] };
+	let filterQuery = { $and: [{ active: true, orgId: mongoose.Types.ObjectId(orgId) }] };
 
     const aggregateQuery = [
         {
@@ -28,4 +29,4 @@ const RoleList = async () => {
     };
 };
 
-module.exports = RoleList;
+module.exports = roleList;

@@ -8,16 +8,17 @@ const update = catchAsync(async (req, res) => {
 	const body = req.body;
 	const { id } = pick(req.params, ["id"])
     const {isOverride} = pick(req.body,['isOverride'])
+    const { orgId } = pick(req.user._doc, ['orgId'])
     const formattedDate = new Date().toISOString();
-    const userID =req.user._id
+    const userID = req.user._id
 
-    let user
+    let label
     if (isOverride) {
-	user = await service.updateLabel({ id, data: {...body,oclUpdatedBy:userID,oclUpdatedAt: formattedDate}, userId: userID })
+	    label = await service.updateLabel({ id, data: {...body,oclUpdatedBy:userID,oclUpdatedAt: formattedDate}, userId: userID, orgId })
     }else{
-	user = await service.updateLabel({ id, data: body, userId: userID })
+        label = await service.updateLabel({ id, data: body, userId: userID ,orgId})
     }
-	if (user) sendResponse(res, httpStatus.OK, "Label updated successfully", null)
+	if (label) sendResponse(res, httpStatus.OK, "Label updated successfully", null)
 	else sendResponse(res, httpStatus.BAD_REQUEST, null, "Not able to update")
 });
 

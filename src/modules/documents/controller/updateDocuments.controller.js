@@ -7,8 +7,9 @@ const service = require("../services");
 const add = catchAsync(async (req, res) => {
   const updatedBy = req.user._id
   const { id } = await pick(req.params, ["id"]);
+  const { orgId } = await pick(req.user._doc, ["orgId"]);
 
-  const list = await service.updateDocument({id:id,body:req.body});
+  const list = await service.updateDocument({id:id,body:req.body,orgId});
     if (list) {
       sendResponse(res, httpStatus.OK, list, null);
     }else{

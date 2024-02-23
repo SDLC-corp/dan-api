@@ -2,8 +2,8 @@ const Model = require('../documents.model')
 const mongoose = require('mongoose')
 
 
-const list = async ( filter ) => {
-  let filterQuery = { $and: [{ active: true }] };
+const list = async ( {filter,orgId} ) => {
+  let filterQuery = { $and: [{ active: true , orgId: mongoose.Types.ObjectId(orgId)}] };
 
   if (filter?.searchTxt && filter?.searchTxt != "") {
     let a = {

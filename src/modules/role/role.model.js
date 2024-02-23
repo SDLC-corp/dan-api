@@ -18,6 +18,10 @@ const modelSchema = mongoose.Schema(
         active: {
             type: Boolean,
             default: true,
+        },
+        orgId: {
+            type: mongoose.Types.ObjectId,
+            required: true,
         }
     },
     {

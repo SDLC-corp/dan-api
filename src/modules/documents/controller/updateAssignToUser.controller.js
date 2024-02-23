@@ -8,8 +8,8 @@ const ApiError = require("../../../utils/ApiError");
 const assignUsers = catchAsync(async (req, res) => {
   const { id } = await pick(req.params, ["id"]);
   const { userId } = await pick(req.body, ["userId"]);
-    console.log('req.body',req.body);
-  const data = await service.assignToUser({documentId:id,userId})
+  const { orgId } = await pick(req.user, ["orgId"]);
+  const data = await service.assignToUser({documentId:id,userId,orgId})
   if(data){
       sendResponse(res, httpStatus.OK, data, null);
   } else {

@@ -25,6 +25,10 @@ const modelSchema = mongoose.Schema(
         createdBy: {
             type: mongoose.Types.ObjectId,
         },
+        orgId: {
+            type: mongoose.Types.ObjectId,
+            required : true,
+        },
         updatedBy: {
             type: mongoose.Types.ObjectId,
         },

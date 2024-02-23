@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const Model = require("../labels.model");
 
-const getLabelById = async (id) => {
+const getLabelById = async ({id,orgId}) => {
     try {
-        let filterQuery = { _id: mongoose.Types.ObjectId(id), active: true }
+        let filterQuery = { _id: mongoose.Types.ObjectId(id), active: true, orgId: mongoose.Types.ObjectId(orgId)}
         const aggregateQuery = [
             {
                 $match: filterQuery,

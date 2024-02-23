@@ -6,7 +6,8 @@ const service = require("../services");
 
 const getLabelById = catchAsync(async (req, res) => {
     const { id } = pick(req.params, ["id"])
-    const field = await service.getLogicById(id);
+    const { orgId } =  pick(req.user._doc, ["orgId"])
+    const field = await service.getLogicById({id,orgId});
     if (field) sendResponse(res, httpStatus.OK, field, null);
     else sendResponse(res, httpStatus.BAD_REQUEST, null, `Logic not found`);
 });

@@ -7,8 +7,9 @@ const pick = require("../../../utils/pick");
 const update = catchAsync(async (req, res) => {
     const body = req.body;
     const { id } = pick(req.params, ["id"])
+    const { orgId } =  pick(req.user._doc,["orgId"])
 
-    const user = await service.updateLogic({ id, data: body, userId: req.user._id })
+    const user = await service.updateLogic({ id, data: body, userId: req.user._id, orgId })
     if (user) sendResponse(res, httpStatus.OK, "Logic updated successfully", null)
     else sendResponse(res, httpStatus.BAD_REQUEST, null, "Not able to update")
 });

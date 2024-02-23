@@ -4,12 +4,9 @@ const Model = require("../documents.model");
 const ApiError = require('../../../utils/ApiError');
 const httpStatus = require('http-status');
 
-const getUserById = async ({docId,loggedInUser}) => {
-        let filterQuery = { _id: mongoose.Types.ObjectId(docId), active: true }
+const getUserById = async ({docId,orgId}) => {
+        let filterQuery = { _id: mongoose.Types.ObjectId(docId), active: true, orgId: mongoose.Types.ObjectId(orgId) }
 
-        if (loggedInUser.role == "documentation") {
-            filterQuery ={...filterQuery, assignTo:mongoose.Types.ObjectId(loggedInUser._id)}
-        }
 
         const aggregateQuery = [
             {
@@ -92,9 +89,9 @@ const getUserById = async ({docId,loggedInUser}) => {
         ];
 
         let result = await Model.aggregate(aggregateQuery);
-            if (loggedInUser.role == "documentation" && !result.length ) {
-                throw new ApiError(httpStatus.UNAUTHORIZED, "You do not have authorization to access this document", {}, "")
-            }
+            // if (loggedInUser.role == "documentation" && !result.length ) {
+            //     throw new ApiError(httpStatus.UNAUTHORIZED, "You do not have authorization to access this document", {}, "")
+            // }
 
         result = result[0]
         // let jobs = await OTMJobProcess.findOne({documentId: result._id}).sort({_id: -1})

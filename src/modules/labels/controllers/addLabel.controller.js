@@ -15,6 +15,9 @@ const add = catchAsync(async (req, res) => {
   } = await pick(req.body, ['label', 'documentTypeId', 'fieldId', "logicCodeId", "isOverride", "overrideCustomLogic"]);
     let id = req.user._id
     const formattedDate = new Date().toISOString();
+
+    const {orgId,_id} = pick(req.user._doc,["orgId","_id"])
+
   let result = {}
   if (isOverride) {
     result = {
@@ -23,8 +26,8 @@ const add = catchAsync(async (req, res) => {
       fieldId,
       isOverride,
       overrideCustomLogic,
-      oclCreatedBy:id,
-      oclUpdatedBy:id,
+      oclCreatedBy:_id,
+      oclUpdatedBy:_id,
       oclCreatedAt:formattedDate,
       oclUpdatedAt: formattedDate  
     }
@@ -39,7 +42,7 @@ const add = catchAsync(async (req, res) => {
     }
   }
 
-  const created = await service.addLabel({ ...result, userId: id });
+  const created = await service.addLabel({ ...result, userId: _id,orgId });
 
   sendResponse(res, httpStatus.OK, created, null);
 });

@@ -13,11 +13,13 @@ const listController = catchAsync(async (req, res) => {
     } = pick(req.query, ["limit", "page", "search", "all"])
     let filter_Json_data = search ? JSON.parse(search) : null;
 
+    const { orgId } = pick(req.user._doc,["orgId"])
+
     let list
     if(all){
-        list = await service.listAllLogic({ limit, page, all },filter_Json_data);
+        list = await service.listAllLogic({orgId ,search: filter_Json_data});
     } else {
-        list = await service.listLogic({ limit, page, all },filter_Json_data);
+        list = await service.listLogic({ limit, page, all, orgId, search: filter_Json_data});
     }
     sendResponse(res, httpStatus.OK, list, null);
 });

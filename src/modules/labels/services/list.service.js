@@ -1,7 +1,7 @@
 const Model = require("../labels.model");
 const mongoose = require("mongoose");
 
-const fieldsList = async ({ limit = 10, page = 0 }, search) => {
+const fieldsList = async ({ limit = 10, page = 0, orgId, search }) => {
 
   let list = [];
   let totalCount;
@@ -9,7 +9,7 @@ const fieldsList = async ({ limit = 10, page = 0 }, search) => {
   limit = limit && parseInt(limit, 10) > 0 ? parseInt(limit, 10) : 10;
   const start = page && parseInt(page, 10) > 0 ? parseInt(page, 10) : 1;
   const skip = (start - 1) * limit;
-  let filterQuery = { $and: [{ active: true }] };
+  let filterQuery = { $and: [{ active: true, orgId: mongoose.Types.ObjectId(orgId) }] };
 
   if (search?.documentTypeId) { filterQuery.$and.push({ documentTypeId: mongoose.Types.ObjectId(search?.documentTypeId) }) }
   

@@ -1,8 +1,9 @@
+const mongoose  = require("mongoose");
 const Model = require("../logic.model");
 
-const listAll = async (filter,search) => {
+const listAll = async ({orgId,search}) => {
 
-	let filterQuery = { $and: [{ active: true }] };
+	let filterQuery = { $and: [{ active: true ,orgId:mongoose.Types.ObjectId(orgId)}] };
 
      if (search?.name && search?.name != "") {
 		var searchRegex = new RegExp(`.*${search?.name}.*`, "i")

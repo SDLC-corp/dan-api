@@ -3,15 +3,16 @@ const Model = require("../documents.model");
 const { SendMailAPI } = require('../../../utils/emailServices');
 const User = require('../../user/user.model'); 
 
-const deleteDocumentByMail = async ({ id, loggedInUser }, domainName) => {
+const deleteDocumentByMail = async ({ id, loggedInUser, orgId }) => {
     try {
-        const filterQuery = {_id:id,active:true}
+        const filterQuery = {_id:id,active:true, orgId : mongoose.Types.ObjectId(orgId)}
 
         let recipients = []
 
         const documents = await Model.findOne(filterQuery);  
         
-        const users = await User.find({ role: 'admin',active:true ,approvalDomain: documents.domainName});
+        // const users = await User.find({ role: 'admin',active:true ,approvalDomain: documents.domainName});
+        const users = await User.find({ role: 'admin',active:true , orgId: mongoose.Types.ObjectId(orgId)});
         const emailAddresses = users.map(user => user.email);
 
         recipients = emailAddresses;

@@ -1,8 +1,9 @@
+const mongoose = require('mongoose');
 const model = require('./../user.model')
 
-const usersListWithOutLimit = async (search) => {
+const usersListWithOutLimit = async ({search,orgId}) => {
 
-	let filterQuery = { $and: [{ active: true,role: {$ne: "superAdmin"}}] };
+	let filterQuery = { $and: [{ active: true,role: {$ne: "superAdmin"}, orgId : mongoose.Types.ObjectId(orgId)}] };
 	
 	if (search?.name && search?.name != "") {
 		var searchRegex = new RegExp(`.*${search?.name}.*`, "i")

@@ -14,6 +14,10 @@ const modelSchema = mongoose.Schema(
     assignTo: {
       type: mongoose.Types.ObjectId,
     },
+    orgId: {
+      type: mongoose.Types.ObjectId,
+      required: true,
+    },
     documentUrl: {
       type: String,
       required: true,

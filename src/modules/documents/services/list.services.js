@@ -4,8 +4,8 @@ const ApiError = require('../../../utils/ApiError');
 const httpStatus = require('http-status');
 
 
-const list = async ({ limit = 100, page = 0 }, filter, loggedInUser) => {
-    let filterQuery = { $and: [{ active: true }] };
+const list = async ({ limit = 100, page = 0, orgId, filter }) => {
+    let filterQuery = { $and: [{ active: true ,orgId: mongoose.Types.ObjectId(orgId)}]};
     const length = limit && parseInt(limit, 10) > 0 ? parseInt(limit, 10) : 10;
     const start = page && parseInt(page, 10) > 0 ? parseInt(page, 10) : 1;
     const skip = (start - 1) * length;
@@ -43,62 +43,62 @@ const list = async ({ limit = 100, page = 0 }, filter, loggedInUser) => {
     }
     // Filters for LoggedInUser === "Admin"
 
-    if (loggedInUser.role == "documentation") {
-        const LoggedInUserId = mongoose.Types.ObjectId(loggedInUser._id);
-        filterQuery.$and.push({ assignTo: LoggedInUserId })
-        if (filter?.searchTxt && filter.searchTxt != "") {
-            let searchQuery
-            if (Number(filter.searchTxt)) {
-                searchQuery = {
-                    $or: [
-                        { seqId: parseInt(filter.searchTxt) },
-                        { "fieldsAndValues.fieldValue": filter.searchTxt },
-                    ],
-                    assignTo: LoggedInUserId,
-                };
-            } else {
-                let searchRegEx = { $regex: filter.searchTxt, $options: "i" }
-                searchQuery = {
-                    $or: [
-                        { documentNo: searchRegEx },
-                        { domainName: searchRegEx },
-                        { "fieldsAndValues.fieldValue": searchRegEx },
-                    ],
-                    assignTo: LoggedInUserId,
-                };
-            }
-            filterQuery.$and.push(searchQuery);
-        }
+    // if (loggedInUser.role == "documentation") {
+    //     const LoggedInUserId = mongoose.Types.ObjectId(loggedInUser._id);
+    //     filterQuery.$and.push({ assignTo: LoggedInUserId })
+    //     if (filter?.searchTxt && filter.searchTxt != "") {
+    //         let searchQuery
+    //         if (Number(filter.searchTxt)) {
+    //             searchQuery = {
+    //                 $or: [
+    //                     { seqId: parseInt(filter.searchTxt) },
+    //                     { "fieldsAndValues.fieldValue": filter.searchTxt },
+    //                 ],
+    //                 assignTo: LoggedInUserId,
+    //             };
+    //         } else {
+    //             let searchRegEx = { $regex: filter.searchTxt, $options: "i" }
+    //             searchQuery = {
+    //                 $or: [
+    //                     { documentNo: searchRegEx },
+    //                     { domainName: searchRegEx },
+    //                     { "fieldsAndValues.fieldValue": searchRegEx },
+    //                 ],
+    //                 assignTo: LoggedInUserId,
+    //             };
+    //         }
+    //         filterQuery.$and.push(searchQuery);
+    //     }
 
-        if (filter?.shippingLineId && filter.shippingLineId != "") {
-            filterQuery.$and.push({
-                shippingLineId: mongoose.Types.ObjectId(filter.shippingLineId),
-                assignTo: LoggedInUserId,
-            });
-        }
+    //     if (filter?.shippingLineId && filter.shippingLineId != "") {
+    //         filterQuery.$and.push({
+    //             shippingLineId: mongoose.Types.ObjectId(filter.shippingLineId),
+    //             assignTo: LoggedInUserId,
+    //         });
+    //     }
 
-        if (filter?.documentType && filter.documentType != "") {
-            const documentTypeQuery = {
-                documentType: { $regex: filter.documentType, $options: "i" },
-                assignTo: LoggedInUserId,
-            };
-            filterQuery.$and.push(documentTypeQuery);
-        }
+    //     if (filter?.documentType && filter.documentType != "") {
+    //         const documentTypeQuery = {
+    //             documentType: { $regex: filter.documentType, $options: "i" },
+    //             assignTo: LoggedInUserId,
+    //         };
+    //         filterQuery.$and.push(documentTypeQuery);
+    //     }
 
-        if (filter?.fromDate && filter?.toDate) {
-            const fromDate = new Date(filter.fromDate);
-            const toDate = new Date(filter.toDate);
+    //     if (filter?.fromDate && filter?.toDate) {
+    //         const fromDate = new Date(filter.fromDate);
+    //         const toDate = new Date(filter.toDate);
 
-            const dateRangeQuery = {
-                createdAt: {
-                    $gte: new Date(fromDate.setHours(0, 0, 0, 0)),
-                    $lte: new Date(toDate.setHours(23, 59, 59, 999)),
-                },
-                assignTo: LoggedInUserId,
-            };
-            filterQuery.$and.push(dateRangeQuery);
-        }
-    }
+    //         const dateRangeQuery = {
+    //             createdAt: {
+    //                 $gte: new Date(fromDate.setHours(0, 0, 0, 0)),
+    //                 $lte: new Date(toDate.setHours(23, 59, 59, 999)),
+    //             },
+    //             assignTo: LoggedInUserId,
+    //         };
+    //         filterQuery.$and.push(dateRangeQuery);
+    //     }
+    // }
 
     // Filters for LoggedInUser === "Admin"
 

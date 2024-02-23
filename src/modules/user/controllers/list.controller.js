@@ -7,7 +7,9 @@ const service = require("../services");
 const list = catchAsync(async (req, res) => {
   const { limit, page, search } = await pick(req.query, ["limit", "page", "search"]);
   const filter_Json_data = search ? JSON.parse(search) : null
-  const list = await service.getUsersList({limit, page},filter_Json_data);
+  const { orgId } = await pick(req.user._doc, ["orgId"]);
+  console.log("orgId",orgId);
+  const list = await service.getUsersList({limit, page,orgId},filter_Json_data);
   sendResponse(res, httpStatus.OK, list, null);
 });
 module.exports = list;

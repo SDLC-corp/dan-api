@@ -6,8 +6,8 @@ const service = require("../services");
 
 const add = catchAsync(async (req, res) => {
   const { paramName, displayName, regx, fieldType, fieldTableValue, fieldTextValue, fieldNumValue,master,dateFormat,fieldGroupId } = await pick(req.body, ['paramName', 'displayName', "regx", "fieldType", 'fieldTableValue', 'fieldTextValue', 'fieldNumValue','master',"fieldGroupId"]);
-
-  const list = await service.addField({ paramName, displayName, regx, fieldType, fieldTableValue, fieldTextValue, fieldNumValue, updatedBy: req.user._id, createdBy: req.user._id ,master,dateFormat,fieldGroupId});
+  const {orgId}= pick(req.user._doc,["orgId"])
+  const list = await service.addField({ paramName, displayName, regx, fieldType, fieldTableValue, fieldTextValue, fieldNumValue, updatedBy: req.user._id, createdBy: req.user._id ,master,dateFormat,fieldGroupId,orgId});
 
   sendResponse(res, httpStatus.OK, list, null);
 });

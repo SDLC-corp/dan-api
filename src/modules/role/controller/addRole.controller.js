@@ -8,7 +8,9 @@ const add = catchAsync(async (req, res) => {
     const {
         name, description,disabledModules
     } = await pick(req.body, ['name', 'description', 'disabledModules']);
-    const created = await service.addRole({ name, description,disabledModules});
+    const {orgId} = pick(req.user._doc, ["orgId"])
+    
+    const created = await service.addRole({ name, description,disabledModules, orgId});
     sendResponse(res, httpStatus.OK, created, null);
 });
 

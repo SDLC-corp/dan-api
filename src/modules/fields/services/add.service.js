@@ -4,7 +4,6 @@ const Model = require("../fields.model")
 const Mongoose  = require("mongoose")
 
 async function add(data) {
-    console.log("data",data);
     let findQuery = {paramName: data.paramName, displayName: data.displayName}
     let paramNameQuery = {paramName: data.paramName}
     let displayNameQuery = {displayName: data.displayName}
@@ -14,7 +13,10 @@ async function add(data) {
     if(present) throw new ApiError(httpStatus.BAD_REQUEST, "Param name and Display name pair already exists", true, "error")
     if(paramName) throw new ApiError(httpStatus.BAD_REQUEST, "Param name already exists", true, "error")
     if(displayName) throw new ApiError(httpStatus.BAD_REQUEST, "Display name already exists", true, "error")
-    let {index} = await Model.findOne().sort({index:-1})
+    if (data.orgId) {
+        data.orgId = Mongoose.Types.ObjectId(data.orgId) 
+    }
+    let {index} = await Model.findOne({orgId:data.orgId}).sort({index:-1})
 
     let groupId 
     if (data?.fieldGroupId?.trim()) {

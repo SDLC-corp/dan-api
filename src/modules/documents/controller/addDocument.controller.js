@@ -12,10 +12,13 @@ const add = catchAsync(async (req, res) => {
     documentUrl,
      } = await pick(req.body,[ "documentTypeId", "documentUrl"]);
 
+  const {orgId} = pick(req.user._doc,["orgId"])
+
   const list = await service.addDocument({ 
     documentTypeId,
     documentUrl,
     assignTo,
+    orgId,
     createdBy});
   sendResponse(res, httpStatus.OK, list, null);
 });

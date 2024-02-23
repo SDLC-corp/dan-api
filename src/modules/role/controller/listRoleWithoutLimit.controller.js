@@ -13,7 +13,9 @@ const listController = catchAsync(async (req, res) => {
     // } = pick(req.query, ["limit", "page", "search", "all"])
     // let filter_Json_data = search ? JSON.parse(search) : null;
 
-    let list = await service.listRoleWithoutLimit();
+    const { orgId } = pick(req.user._doc,["orgId"])
+
+    let list = await service.listRoleWithoutLimit({orgId});
     sendResponse(res, httpStatus.OK, list, null);
 });
 module.exports = listController;

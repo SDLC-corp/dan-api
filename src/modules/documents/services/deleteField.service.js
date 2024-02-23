@@ -3,9 +3,10 @@ const mongo = require("mongoose")
 
 async function singleDocumentDeleteField({itemId,isShipUnit,documentId}) {
 
-    console.log('documentId, itemId ,isShipUnit',documentId, itemId ,isShipUnit);
 
     const document = await Model.findById(documentId,'fieldsAndValues')
+    // const document = await Model.findOne({_id:mongo.Types.ObjectId(documentId)},'fieldsAndValues')
+
 
     if(isShipUnit){
 

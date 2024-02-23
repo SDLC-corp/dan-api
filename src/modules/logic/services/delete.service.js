@@ -2,17 +2,18 @@ const mongoose = require('mongoose');
 const Model = require("../logic.model");
 const LabelModel = require('../../labels/labels.model')
 
-const deleteLogic = async ({ id, userId }) => {
+const deleteLogic = async ({ id, userId ,orgId}) => {
     try {
         
         const logicCodeId = mongoose.Types.ObjectId(id);
+        const organizationId = mongoose.Types.ObjectId(orgId);
 
         const customLogicUpdate = await Model.updateOne(
-            { _id: logicCodeId, active: true },
+            { _id: logicCodeId, active: true, orgId: organizationId },
             { $set: { active: false } }
         );
 
-        const labelUpdate = await LabelModel.updateMany({ logicCodeId, active: true }, {
+        const labelUpdate = await LabelModel.updateMany({ logicCodeId, active: true, orgId:organizationId }, {
             $set: { active: false, updatedBy: userId }
         })
 

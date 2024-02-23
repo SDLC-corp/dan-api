@@ -7,24 +7,25 @@ const counterIncrementor = require("../../utils/counterIncrement");
 
 const userSchema = mongoose.Schema(
   {
-    orgName: {
+    name: {
       type: String,
       trim: true,
       required:true
     },
-    network: {
+    email: {
       type: String,
       required: true,
-      enum: ["ethereum", "avalanche", "polygon"],
-    },
-    chainId: {
-      type: Number,
-      required: true,
-    },
-    subDomain: {
-      type: String,
       trim: true,
     },
+    active:{
+      type:Boolean,
+      default:true
+    },
+    url:{
+      type:String,
+      default:""
+    }
+
   },
   {
     timestamps: true,

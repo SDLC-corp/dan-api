@@ -31,6 +31,10 @@ const modelSchema = mongoose.Schema(
         updatedBy: {
             type: mongoose.Types.ObjectId,
         },
+        orgId: {
+            type: mongoose.Types.ObjectId,
+            required: true,
+        },
     },
     {
         timestamps: true,

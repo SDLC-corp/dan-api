@@ -6,10 +6,10 @@ const pick = require("../../../utils/pick")
 
 const deleteDocumentByMail = catchAsync(async (req, res) => {
     const loggedInUser = req.user.id
-    const { domainName } = await pick(req.query, ["domainName"]);
     const { id } = pick(req.params, ["id"])
+    const { orgId } = pick(req.user._doc,["orgId"])
 
-    const logic = await service.deleteDocumentByMail({ id,loggedInUser },domainName)
+    const logic = await service.deleteDocumentByMail({ id,loggedInUser,orgId })
     if (logic) sendResponse(res, httpStatus.OK, logic, null)
     else sendResponse(res, httpStatus.BAD_REQUEST, null, logic)
 })

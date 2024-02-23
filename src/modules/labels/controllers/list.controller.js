@@ -7,7 +7,8 @@ const { convertToJSON } = require("../../../utils/helper");
 
 const list = catchAsync(async (req, res) => {
     const {limit, page, search} = pick(req.query, ["limit", "page", "search"])
-    const list = await service.list({limit, page}, search);
+    const { orgId } = pick(req.user._doc, ["orgId"])
+    const list = await service.list({limit, page, orgId, search});
     sendResponse(res, httpStatus.OK, list, null);
 });
 module.exports = list;

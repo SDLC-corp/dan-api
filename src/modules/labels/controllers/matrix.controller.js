@@ -6,7 +6,8 @@ const service = require("../services");
 
 const generateMatrix = catchAsync(async (req, res) => {
   const {limit} = pick(req.query, ["limit"])
-  const matrixArr = await service.generateMatrix({limit});
+  const {orgId } = pick(req.user._doc, ["orgId"])
+  const matrixArr = await service.generateMatrix({limit,orgId});
   sendResponse(res, httpStatus.OK, matrixArr, null);
 });
 

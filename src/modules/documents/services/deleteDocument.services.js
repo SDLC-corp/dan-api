@@ -2,11 +2,14 @@ const mongoose = require('mongoose');
 const Model = require("../documents.model");
 const { SendMailAPI } = require('../../../utils/emailServices');
 
-const deleteDocument = async ({ id,loggedInUserId }) => {
+const deleteDocument = async ({ id,orgId }) => {
     try {
         const documentId = mongoose.Types.ObjectId(id);
+        orgId = mongoose.Types.ObjectId(orgId);
 
-        const foundDoc = await Model.findOne(documentId)
+        const foundDoc = await Model.findOne({_id:documentId,orgId})
+
+        console.log("foundDoc",foundDoc);
 
         if (!foundDoc) {
             return false

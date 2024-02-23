@@ -1,7 +1,8 @@
+const mongoose = require('mongoose');
 const Model = require('./../fields.model')
 
-const fieldsList = async ({limit=100, page=0},search) => {
-	let filterQuery = { $and: [{ active: true }] };
+const fieldsList = async ({limit=100, page=0, user, search}) => {
+	let filterQuery = { $and: [{ active: true , orgId:mongoose.Types.ObjectId(user.orgId)}] };
 	const length = limit && parseInt(limit, 10) > 0 ? parseInt(limit, 10) : 10;
 	const start = page && parseInt(page, 10) > 0 ? parseInt(page, 10) : 1;
 	const skip = (start - 1) * length;

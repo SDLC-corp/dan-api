@@ -1,8 +1,9 @@
 const Model = require("../labels.model");
 const FieldModel = require("../../fields/fields.model");
 const DocumentTypes = require("../../documentTypes/documentType.model");
-const generateMatrix = async ({ limit = 100, page = 0, search }) => {
-    let filterQuery = { active: true };
+const mongoose  = require("mongoose");
+const generateMatrix = async ({ limit = 100, page = 0, search, orgId }) => {
+    let filterQuery = { active: true, orgId: mongoose.Types.ObjectId(orgId) };
     try {
     
       const fields = await FieldModel.find(filterQuery).sort({index:1});
