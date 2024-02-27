@@ -13,8 +13,9 @@ const documentTypesRoute = require('./documentType.route');
 const docsRoute = require('./docs.route');
 const dashboardAnalysisRoute = require('./dashboardAnalysis.route');
 const documentNotesRoute = require('./documentNotes.route');
+const organizationsRoute = require('./organizations.route')
 const { uploadFile } = require('../../utils/fileUpload');
-const router = express.Router();  
+const router = express.Router();
 
 const defaultRoutes = [
   {
@@ -65,6 +66,10 @@ const defaultRoutes = [
     path: '/documentnotes',
     route: documentNotesRoute,
   },
+  {
+    path: '/organizations',
+    route: organizationsRoute
+  }
 ];
 
 // routes available only in development mode

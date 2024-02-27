@@ -22,6 +22,9 @@ const modelSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    documentNo: {
+      type:String
+    },
     active: {
       type: Boolean,
       default: true,

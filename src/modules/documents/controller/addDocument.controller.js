@@ -7,19 +7,22 @@ const service = require("../services");
 const add = catchAsync(async (req, res) => {
   const createdBy = req.user._id
   const assignTo = createdBy
-  const { 
+  const {
     documentTypeId,
     documentUrl,
-     } = await pick(req.body,[ "documentTypeId", "documentUrl"]);
+    documentNo
+  } = await pick(req.body, ["documentTypeId", "documentUrl", "documentNo"]);
 
-  const {orgId} = pick(req.user._doc,["orgId"])
+  const { orgId } = pick(req.user._doc, ["orgId"])
 
-  const list = await service.addDocument({ 
+  const list = await service.addDocument({
     documentTypeId,
     documentUrl,
     assignTo,
     orgId,
-    createdBy});
+    createdBy,
+    documentNo
+  });
   sendResponse(res, httpStatus.OK, list, null);
 });
 

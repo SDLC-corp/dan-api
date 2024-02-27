@@ -14,6 +14,7 @@ const addValidation = {
       "string.empty": `Document Url is required`,
       "any.required": `Document Url is required`,
     }),
+    documentNo: Joi.string().allow("", null)
   }),
 };
 
