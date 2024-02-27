@@ -8,24 +8,18 @@ const mongoose = require('mongoose');
  * @returns {Promise<Series>}
  */
 
-const getDocumentAnalytics = async (loggedInUser, filter,shippingLine) => {
+const getDocumentAnalytics = async (filter,shippingLine,orgId) => {
 
   let documentCount
-  let shippingLineCounts
-  let domainCount
   const currentDate = new Date();
   const oneWeekAgo = new Date();
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
-  let filterQuery = { $and: [{ active: true }] };
-  let mblFilterQuery = { $and: [{ active: true, documentType: 'MBL' }] };
-  let hblFilterQuery = { $and: [{ active: true, documentType: 'HBL' }] };
+  let filterQuery = { $and: [{ active: true, orgId: mongoose.Types.ObjectId(orgId) }] };
   let syncWithOtmFilterQuery = { $and: [{ active: true, syncWithOtm: true }] };
   let asyncWithOtmFilterQuery = { $and: [{ active: true, syncWithOtm: false }] };
-  const userQuery = { $and: [{ active: true}] }
-let documentAgregateQueryGraph = {
-$and: [{ active: true }]
-}
+  const userQuery = { $and: [{ active: true,orgId: mongoose.Types.ObjectId(orgId)}] }
+let documentAgregateQueryGraph = { $and: [{ active: true,orgId: mongoose.Types.ObjectId(orgId) }] }
     if (!filter) {
     // documentAgregateQueryGraph.$and.push ({
     //     createdAt: {
@@ -34,13 +28,6 @@ $and: [{ active: true }]
     //     }
     // })
     }
-
-  if (loggedInUser?.role == 'documentation') { documentAgregateQueryGraph.$and.push({ createdBy: mongoose.Types.ObjectId(loggedInUser?._id) }) }
-  if (loggedInUser?.role == 'documentation') { filterQuery.$and.push({ createdBy: mongoose.Types.ObjectId(loggedInUser?._id) }) }
-  if (loggedInUser?.role == 'documentation') { mblFilterQuery.$and.push({ createdBy: mongoose.Types.ObjectId(loggedInUser?._id) }) }
-  if (loggedInUser?.role == 'documentation') { hblFilterQuery.$and.push({ createdBy: mongoose.Types.ObjectId(loggedInUser?._id) }) }
-  if (loggedInUser?.role == 'documentation') { syncWithOtmFilterQuery.$and.push({ createdBy: mongoose.Types.ObjectId(loggedInUser?._id) }) }
-  if (loggedInUser?.role == 'documentation') { asyncWithOtmFilterQuery.$and.push({ createdBy: mongoose.Types.ObjectId(loggedInUser?._id) }) }
 
   const aggregateQuery = [
     {
@@ -255,8 +242,6 @@ $and: [{ active: true }]
         userCount = await userModel.countDocuments(userQuery);
     }
 
-    const mblDocumentTypeCount = await documentsModel.countDocuments(mblFilterQuery)
-    const hblDocumentTypeCount = await documentsModel.countDocuments(hblFilterQuery)
     const syncWithOtmDocumentCount = await documentsModel.countDocuments(syncWithOtmFilterQuery)
     const asyncWithOtmDocumentCount = await documentsModel.countDocuments(asyncWithOtmFilterQuery)
     let lastThirtyDaysUploadedDocumentCount = await documentsModel.aggregate(documentAgregateQuery, (err, result) => {
@@ -284,11 +269,8 @@ $and: [{ active: true }]
     return {
       data: {
         documentsCount: documentCount, 
-        shippingLineCounts:shippingLineCounts,
-        domainCount:domainCount,
         userCount: userCount,
         lastThirtyDaysUploadedDocumentCount: lastThirtyDaysUploadedDocumentCount,
-        mblDocumentTypeCount: mblDocumentTypeCount, hblDocumentTypeCount: hblDocumentTypeCount,
         asyncWithOtmDocumentCount: asyncWithOtmDocumentCount, syncWithOtmDocumentCount: syncWithOtmDocumentCount,
         documentUploadedByUser: documentUploadedByUser,documentUploadedByShippingLine:documentUploadedByShippingLine
       },
