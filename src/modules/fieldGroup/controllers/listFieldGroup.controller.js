@@ -8,7 +8,8 @@ const ApiError = require("../../../utils/ApiError");
 const list = catchAsync(async (req, res) => {
     const {limit, page,search} = pick(req.query, ["limit", "page","search"])
     let filter_Json_data = search ? JSON.parse(search) : null;
-    const list = await service.listFieldGroup({limit, page},filter_Json_data);
+    const { orgId, _id:userId } = pick(req.user._doc, ['orgId',"_id"])
+    const list = await service.listFieldGroup({limit, page,orgId},filter_Json_data);
     if (list) {
         sendResponse(res, httpStatus.OK, list, null);
     }else{

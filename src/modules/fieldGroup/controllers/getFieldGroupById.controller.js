@@ -6,9 +6,9 @@ const service = require("../services");
 
 const add = catchAsync(async (req, res) => {
   const { id } = await pick(req.params, ['id']);
-  const { ordId } = await pick(req.user._doc, ['ordId']);
+  const { orgId } = await pick(req.user._doc, ['orgId']);
 
-  const list = await service.getFieldGroup({id, ordId});
+  const list = await service.getFieldGroup({id, orgId});
   sendResponse(res, httpStatus.OK, list, null);
 });
 

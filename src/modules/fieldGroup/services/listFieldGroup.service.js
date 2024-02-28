@@ -1,8 +1,9 @@
 const Model = require("../fieldGroups.model");
+const mongoose  = require("mongoose");
 
-const listAll = async ({limit=10,page=1},search) => {
+const listAll = async ({limit=10,page=1,orgId},search) => {
 
-    let filterQuery = { $and: [{ active: true }] };
+    let filterQuery = { $and: [{ active: true, orgId:mongoose.Types.ObjectId(orgId) }] };
     const length = limit && parseInt(limit, 10) > 0 ? parseInt(limit, 10) : 10;
 	const start = page && parseInt(page, 10) > 0 ? parseInt(page, 10) : 1;
 	const skip = (start - 1) * length;

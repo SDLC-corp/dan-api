@@ -7,7 +7,8 @@ const service = require("../services");
 const update = catchAsync(async (req, res) => {
     console.log('req.user',req.user);
     const { id } = pick(req.params,["id"])
-    const list = await service.updateFieldGroup({ objectId:id,data:req.body, updatedBy: req.user.id});
+     const { orgId } = pick(req.user._doc, ['orgId'])
+    const list = await service.updateFieldGroup({ objectId:id,data:req.body, updatedBy: req.user.id,orgId});
   sendResponse(res, httpStatus.OK, list, null);
 });
 
