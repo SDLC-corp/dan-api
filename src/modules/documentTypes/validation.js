@@ -15,10 +15,7 @@ const addValidation = {
       "string.empty": `modelId is required`,
       "any.required": `modelId is required`,
     }),
-    code: Joi.string().required().messages({
-      "string.empty": `code is required`,
-      "any.required": `code is required`,
-    }),
+    code: Joi.string().allow(null, ""),
     logo: Joi.string().allow(null, ""),
     description: Joi.string().allow(null, ""),
   }),
