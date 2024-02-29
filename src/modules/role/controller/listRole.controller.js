@@ -13,9 +13,9 @@ const listController = catchAsync(async (req, res) => {
     } = pick(req.query, ["limit", "page", "search", "all"])
     let filter_Json_data = search ? JSON.parse(search) : null;
 
-    const {orgId} = pick(req.user._doc, ["orgId"])
+    const {orgId,role} = pick(req.user._doc, ["orgId","role"])
 
-    let list = await service.listRole({ limit, page, all,orgId, search:filter_Json_data });
+    let list = await service.listRole({ limit, page, all,orgId, search:filter_Json_data ,role});
     sendResponse(res, httpStatus.OK, list, null);
 });
 module.exports = listController;
