@@ -1,9 +1,9 @@
 const mongoose  = require("mongoose");
 const Model = require("../role.model");
 
-const roleList = async ({ orgId }) => {
+const roleList = async ({ orgId, role }) => {
 
-	let filterQuery = { $and: [{ active: true, orgId: mongoose.Types.ObjectId(orgId) }] };
+	let filterQuery = role==='superAdmin'? { $and: [{ active: true}] }:{ $and: [{ active: true, orgId: mongoose.Types.ObjectId(orgId) }] };
 
     const aggregateQuery = [
         {

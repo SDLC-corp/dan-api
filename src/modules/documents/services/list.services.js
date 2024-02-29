@@ -4,8 +4,8 @@ const ApiError = require('../../../utils/ApiError');
 const httpStatus = require('http-status');
 
 
-const list = async ({ limit = 100, page = 0, orgId, filter }) => {
-    let filterQuery = { $and: [{ active: true ,orgId: mongoose.Types.ObjectId(orgId)}]};
+const list = async ({ limit = 100, page = 0, orgId, filter, role }) => {
+    let filterQuery = role === 'superAdmin' ? { $and: [{ active: true }] } : { $and: [{ active: true, orgId: mongoose.Types.ObjectId(orgId) }] };
     const length = limit && parseInt(limit, 10) > 0 ? parseInt(limit, 10) : 10;
     const start = page && parseInt(page, 10) > 0 ? parseInt(page, 10) : 1;
     const skip = (start - 1) * length;
@@ -37,7 +37,7 @@ const list = async ({ limit = 100, page = 0, orgId, filter }) => {
     if (filter?.documentTypeId) {
         filterQuery.$and.push({ documentTypeId: mongoose.Types.ObjectId(filter?.documentTypeId) })
     }
-   
+
     if (filter?.domainName?.length) {
         filterQuery.domainName = { $in: filter.domainName };
     }
@@ -106,25 +106,25 @@ const list = async ({ limit = 100, page = 0, orgId, filter }) => {
 
 
 
-   try {
-     const list = await Model.aggregate(aggregateQuery)
-        .sort({ _id: -1 })
-        .skip(skip)
-        .limit(Number(limit));
+    try {
+        const list = await Model.aggregate(aggregateQuery)
+            .sort({ _id: -1 })
+            .skip(skip)
+            .limit(Number(limit));
 
 
-    const totalCount = await Model.countDocuments(filterQuery)
-    const filteredCount = await Model.countDocuments(filterQuery)
-    return {
-        data: list,
-        totalCount,
-        filteredCount,
-        page,
-        limit
-    };
-   } catch (error) {
+        const totalCount = await Model.countDocuments(filterQuery)
+        const filteredCount = await Model.countDocuments(filterQuery)
+        return {
+            data: list,
+            totalCount,
+            filteredCount,
+            page,
+            limit
+        };
+    } catch (error) {
         throw new ApiError(httpStatus.BAD_REQUEST, "Something went wrong!")
-   }
+    }
 };
 
 

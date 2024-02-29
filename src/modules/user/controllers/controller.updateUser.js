@@ -9,9 +9,9 @@ const updateUser = catchAsync(async (req, res) => {
 	const body = req.body;
 	let userId = req.params.id;
 
-	const {orgId} = await pick(req.user._doc, ["orgId"]);
+	const {orgId, role} = await pick(req.user._doc, ["orgId", "role"]);
 
-	const user = await service.update(userId, body,orgId)
+	const user = await service.update(userId, body,orgId, role)
 	if(user) sendResponse(res, httpStatus.OK, "User updated", null)
 	else throw new ApiError(httpStatus.BAD_REQUEST, "Not able to update user", false, "")
 });

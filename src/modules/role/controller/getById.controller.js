@@ -6,8 +6,8 @@ const service = require("../services");
 
 const getRoleById = catchAsync(async (req, res) => {
     const { id } = pick(req.params, ["id"])
-    const { orgId } = pick(req.user._doc, ["orgId"])
-    const field = await service.getRoleById({id,orgId});
+    const { orgId, role } = pick(req.user._doc, ["orgId", "role"])
+    const field = await service.getRoleById({id,orgId, role});
     if (field) sendResponse(res, httpStatus.OK, field, null);
     else sendResponse(res, httpStatus.BAD_REQUEST, null, `Role not found`);
 });

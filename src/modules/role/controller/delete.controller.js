@@ -6,10 +6,10 @@ const pick = require("../../../utils/pick")
 
 const deleteLogicById = catchAsync(async (req, res) => {
     const { id } = pick(req.params, ["id"])
-    const {orgId} = pick(req.user._doc, ["orgId"])
-    const role = await service.deleteRole({ id,orgId })
-    if (role) sendResponse(res, httpStatus.OK, role, null)
-    else sendResponse(res, httpStatus.BAD_REQUEST, null, role)
+    const {orgId, role} = pick(req.user._doc, ["orgId", "role"])
+    const response = await service.deleteRole({ id,orgId, role})
+    if (response) sendResponse(res, httpStatus.OK, response, null)
+    else sendResponse(res, httpStatus.BAD_REQUEST, null, response)
 })
 
 module.exports = deleteLogicById
