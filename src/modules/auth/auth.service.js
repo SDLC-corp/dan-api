@@ -196,23 +196,25 @@ const registration = async ({ token, password }) => {
     if (moment().unix() <= decoded?.exp) {
       const payload = { name: registrationProcess.orgName, website: registrationProcess.website }
       const organization = await ORGANIZATION_MODEL.create(payload);
+      const roleData = await Role.findOne({ name: 'Organization Admin', active: true })
       if (organization) {
         const userObj = {
           email: registrationProcess?.email,
           password: password,
           name: registrationProcess?.name,
           orgId: organization?._id,
-          role: "superAdmin",
+          role: "admin",
+          roleId: roleData._id,
           emailVerified: true
         }
         const user = await User.create(userObj);
         if (user) {
           registrationProcess.processCompleted = true;
           await registrationProcess.save();
-        }else {
+        } else {
           throw new ApiError(httpStatus.BAD_GATEWAY, "Something went wrong", false)
         }
-  
+
       } else {
         throw new ApiError(httpStatus.BAD_GATEWAY, "Something went wrong", false)
       }

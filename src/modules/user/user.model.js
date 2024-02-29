@@ -47,7 +47,8 @@ const userSchema = mongoose.Schema(
 
     },
     roleId: {
-      type: mongoose.Types.ObjectId
+      type: mongoose.Types.ObjectId,
+      required:true,
     },
     orgId: {
       type: mongoose.Types.ObjectId,
