@@ -7,7 +7,8 @@ const generateMatrix = async ({ limit = 100, page = 0, search, orgId }) => {
     try {
     
       const fields = await FieldModel.find(filterQuery).sort({index:1});
-      const documentTypes = await DocumentTypes.find(filterQuery);
+      const documentTypes = await DocumentTypes.find({active:true});
+      
   
       const aggregateQuery = [
         { 

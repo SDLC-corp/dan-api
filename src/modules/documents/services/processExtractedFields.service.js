@@ -3,10 +3,14 @@ const Model = require('../documents.model');
 const LabelsModel = require("../../labels/labels.model");
 const LogicModal = require('../../logic/logic.model')
 const DocumentTypeModel = require("../../documentTypes/documentType.model");
+const ExtractedDataModel = require('../extractedData.Model')
 var safeEval = require('safe-eval');
 
 async function processExtractedFields(documentId, clearOverrideValues) {
     const document = await Model.findById(documentId)
+    const extractedData = await ExtractedDataModel.findOne({ documentId: documentId })
+    document.extractedData = extractedData.extractedData
+
     let documentTypeId = document.documentTypeId
 
     const documentTypeDetails = await DocumentTypeModel.findById(documentTypeId);
@@ -14,7 +18,7 @@ async function processExtractedFields(documentId, clearOverrideValues) {
     const portMasterArr = []
     const aggregateQuery = [
         {
-            "$match": { active: true, documentTypeId: mongoose.Types.ObjectId(documentTypeDetails._id)}
+            "$match": { active: true, documentTypeId: mongoose.Types.ObjectId(documentTypeDetails._id) }
         },
         {
             "$lookup": {
@@ -43,14 +47,14 @@ async function processExtractedFields(documentId, clearOverrideValues) {
                 "path": "$logic",
                 "preserveNullAndEmptyArrays": true
             }
-        } , {
+        }, {
             $project: {
                 documentTypeId: 1,
                 label: 1,
                 isOverride: 1,
                 overrideCustomLogic: 1,
                 "field.displayName": 1,
-                "field._id" : 1,
+                "field._id": 1,
                 "field.index": 1,
                 "field.paramName": 1,
                 "field.paramName": 1,
@@ -64,7 +68,7 @@ async function processExtractedFields(documentId, clearOverrideValues) {
         }
     ]
     const labels = await LabelsModel.aggregate(aggregateQuery).sort({ "field.index": 1 });
-    const confidenceLogic = await LogicModal.findOne({shortCode:'EXTRACT_CONFIDENCE'})
+    const confidenceLogic = await LogicModal.findOne({ shortCode: 'EXTRACT_CONFIDENCE' })
     let fieldsAndValues = [];
 
     // reverting for temp as not able to fetch
@@ -84,20 +88,20 @@ async function processExtractedFields(documentId, clearOverrideValues) {
         var context = {
             document: document,
             thisField: aLabel,
-            fieldName:fieldName,
+            fieldName: fieldName,
             portMasterArr: portMasterArr,
             allFields: labels,
             documentTypeDetails: documentTypeDetails,
             log: function (...str) { console.log(...str) }
         }
 
-        
+
 
         let fieldValue, confidence;
         try {
-            if (aLabel.isOverride){
+            if (aLabel.isOverride) {
                 fieldValue = safeEval(aLabel.overrideCustomLogic, context)
-            }else{
+            } else {
                 fieldValue = safeEval(aLabel.logic.textArea, context)
             }
             confidence = safeEval(confidenceLogic.textArea, context)
@@ -107,10 +111,10 @@ async function processExtractedFields(documentId, clearOverrideValues) {
 
         let overrideValue;
 
-        if (!clearOverrideValues && document.fieldsAndValues && document.fieldsAndValues.length > 0){
+        if (!clearOverrideValues && document.fieldsAndValues && document.fieldsAndValues.length > 0) {
             for (let t = 0; t < document.fieldsAndValues.length; t++) {
                 const aFnV = document.fieldsAndValues[t];
-                if (aFnV.fieldName == fieldName && aFnV.overrideValue){
+                if (aFnV.fieldName == fieldName && aFnV.overrideValue) {
                     overrideValue = aFnV.overrideValue
                 }
             }
@@ -137,12 +141,12 @@ async function processExtractedFields(documentId, clearOverrideValues) {
 
             fieldsAndValues.push({
                 fieldName, displayName, fieldType, fieldValue,
-                confidence, field: aLabel.field, overrideValue, 
+                confidence, field: aLabel.field, overrideValue,
             })
         }
-        else{
+        else {
             fieldsAndValues.push({
-                fieldName, displayName, fieldType, fieldValue, 
+                fieldName, displayName, fieldType, fieldValue,
                 confidence, field: aLabel.field, overrideValue
             })
         }

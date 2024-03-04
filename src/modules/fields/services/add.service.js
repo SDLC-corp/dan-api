@@ -4,9 +4,9 @@ const Model = require("../fields.model")
 const Mongoose  = require("mongoose")
 
 async function add(data) {
-    let findQuery = {paramName: data.paramName, displayName: data.displayName}
-    let paramNameQuery = {paramName: data.paramName}
-    let displayNameQuery = {displayName: data.displayName}
+    let findQuery = {paramName: data.paramName, displayName: data.displayName, orgId: data.orgId}
+    let paramNameQuery = {paramName: data.paramName, orgId: data.orgId}
+    let displayNameQuery = {displayName: data.displayName , orgId: data.orgId}
     let present = await Model.findOne(findQuery)
     let paramName = await Model.findOne(paramNameQuery)
     let displayName = await Model.findOne(displayNameQuery)
@@ -16,15 +16,14 @@ async function add(data) {
     if (data.orgId) {
         data.orgId = Mongoose.Types.ObjectId(data.orgId) 
     }
-    let {index} = await Model.findOne({orgId:data.orgId}).sort({index:-1})
-
+    let field  = await Model.findOne({orgId:data.orgId}).sort({index:-1}) || {index:0}
     let groupId 
     if (data?.fieldGroupId?.trim()) {
         groupId = Mongoose.Types.ObjectId(data.fieldGroupId) 
     }else{
         groupId = null
     }
-    let created = await Model.create({...data,fieldGroupId:groupId,index:Number(index+1)})
+    let created = await Model.create({...data,fieldGroupId:groupId,index:Number(field?.index +1)   })
     return created
 }
 

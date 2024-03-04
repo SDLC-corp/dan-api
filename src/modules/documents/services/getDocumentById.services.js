@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 const Model = require("../documents.model");
-// const OTMJobProcess = require("../../OTMJobProcess/OTMJobProcess.model");
-const ApiError = require('../../../utils/ApiError');
+const EXTRACTED_DATA_MODEL = require('../extractedData.Model');
 const httpStatus = require('http-status');
+const ApiError = require('../../../utils/ApiError');
 
 const getUserById = async ({ docId, orgId, role }) => {
     let filterQuery = role === 'superAdmin' ? { _id: mongoose.Types.ObjectId(docId), active: true }
         : { _id: mongoose.Types.ObjectId(docId), active: true, orgId: mongoose.Types.ObjectId(orgId) }
-
+    const extractedData = await EXTRACTED_DATA_MODEL.findOne({documentId: mongoose.Types.ObjectId(docId)})
 
     const aggregateQuery = [
         {
@@ -66,7 +66,7 @@ const getUserById = async ({ docId, orgId, role }) => {
                 document: 1,
                 createdBy: 1,
                 isJobDone: 1,
-                extractedData: 1,
+                // extractedData: 1,
                 isSuccess: 1,
                 orderType: 1,
                 createdAt: 1,
@@ -95,12 +95,12 @@ const getUserById = async ({ docId, orgId, role }) => {
     // }
 
     result = result[0]
-    // let jobs = await OTMJobProcess.findOne({documentId: result._id}).sort({_id: -1})
 
-    // if(jobs){
-    //     result.jobs = jobs._doc
-    // }
     if (result) {
+        if(!extractedData){
+            throw new ApiError(httpStatus.BAD_REQUEST, "Extracted Data Not Found!", {}, "")
+        }
+        result.extractedData = extractedData.extractedData
         return result
     } else {
         return null

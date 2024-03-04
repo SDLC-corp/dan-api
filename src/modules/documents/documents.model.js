@@ -32,10 +32,6 @@ const modelSchema = mongoose.Schema(
     seqId: {
       type: Number
     },
-    extractedData: {
-      type: Object,
-      default: {},
-    },
     fieldsAndValues: {
       type: Array,
       default: [],

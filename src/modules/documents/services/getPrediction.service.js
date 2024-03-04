@@ -5,15 +5,14 @@ const {
 const Model = require("../documents.model");
 const DocumentTypeModel = require("../../documentTypes/documentType.model");
 const ProcessExtracted = require("./processExtractedFields.service");
+const ExtractedDataModel = require('../extractedData.Model')
 
 async function formRecognizerExtractFields(documentData, clearOverrideValues) {
     console.log("Extract Fields START ::");
 
     try {
         const { documentUrl, documentTypeId } = documentData;
-
         const found = await DocumentTypeModel.findOne(documentTypeId);
-
         if (found && found.modelId) {
 
             const modelId = found.modelId;
@@ -52,14 +51,16 @@ async function formRecognizerExtractFields(documentData, clearOverrideValues) {
                     isSuccess: true,
                     isJobDone: true,
                     error: "",
-                    extractedData: result,
                 },
             });
+
+            // save extracted data to Extracted Data model
+            await ExtractedDataModel.create({ documentId: documentData._id, extractedData: result })
 
             await ProcessExtracted(documentData._id, clearOverrideValues);
 
         } else {
-          throw new Error("Document Type not found or modelId not present : documentTypeId ::" + documentTypeId);
+            throw new Error("Document Type not found or modelId not present : documentTypeId ::" + documentTypeId);
         }
     } catch (error) {
         console.error("Extraction Error ::", error);
