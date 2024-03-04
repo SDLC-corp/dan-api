@@ -12,7 +12,7 @@ const generateMatrix = async ({ limit = 100, page = 0, search, orgId }) => {
   
       const aggregateQuery = [
         { 
-            "$match" : {active: true}
+            "$match" : {active: true, orgId: mongoose.Types.ObjectId(orgId)}
         }, 
         { 
             "$lookup" : {
