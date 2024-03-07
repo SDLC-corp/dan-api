@@ -12,12 +12,16 @@ const organizationsSchema = mongoose.Schema(
       trim: true,
       required: true,
     },
-    seqId:{
-      type:Number
+    syncApiUrl: {
+      type: String,
+      trim: true
     },
-    active:{
-      type:Boolean,
-      default:true
+    seqId: {
+      type: Number
+    },
+    active: {
+      type: Boolean,
+      default: true
     },
   },
   {

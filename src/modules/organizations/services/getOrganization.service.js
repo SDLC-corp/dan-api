@@ -8,7 +8,7 @@ const getOrgdById = async ({orgId}) => {
         if(result){
             return result
         }else{
-            throw new ApiError(httpStatus.BAD_REQUEST, "Email Already taken")
+            throw new ApiError(httpStatus.BAD_REQUEST, "Organization Not Found")
         }
     } catch (error) {
         return null

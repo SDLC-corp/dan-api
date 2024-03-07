@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.route('/')
     .get(auth("manageUsers"), Controller.getOrgdById)
-
+    .put(auth("manageUsers"), Controller.updateOrg)
 
 
 module.exports = router;
