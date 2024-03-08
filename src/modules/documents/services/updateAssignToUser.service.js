@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const Model = require("../documents.model");
+const ApiError = require('../../../utils/ApiError');
+const httpStatus = require('http-status');
 
 const updateAssignUser = async ({ documentId, userId, orgId }) => {
     try {
