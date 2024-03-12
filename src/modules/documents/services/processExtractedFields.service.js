@@ -18,7 +18,7 @@ async function processExtractedFields(documentId, clearOverrideValues) {
     const portMasterArr = []
     const aggregateQuery = [
         {
-            "$match": { active: true, documentTypeId: mongoose.Types.ObjectId(documentTypeDetails._id) }
+            "$match": { active: true, documentTypeId: mongoose.Types.ObjectId(documentTypeDetails._id), orgId: mongoose.Types.ObjectId(document.orgId) }
         },
         {
             "$lookup": {
