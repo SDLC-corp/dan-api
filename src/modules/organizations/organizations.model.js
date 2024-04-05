@@ -16,6 +16,10 @@ const organizationsSchema = mongoose.Schema(
       type: String,
       trim: true
     },
+    isFree:{
+      type:Boolean,
+      default:true,
+    },
     seqId: {
       type: Number
     },
