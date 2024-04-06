@@ -16,9 +16,13 @@ const organizationsSchema = mongoose.Schema(
       type: String,
       trim: true
     },
-    isFree:{
+    isFreeAccount:{
       type:Boolean,
       default:true,
+    },
+    documentUploadedCount:{
+      type: Number,
+      default: 0,
     },
     seqId: {
       type: Number

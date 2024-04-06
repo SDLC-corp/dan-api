@@ -4,6 +4,8 @@ const LabelsModel = require("../../labels/labels.model");
 const LogicModal = require('../../logic/logic.model')
 const DocumentTypeModel = require("../../documentTypes/documentType.model");
 const ExtractedDataModel = require('../extractedData.Model')
+const ORGANIZATION_MODEL = require('../../organizations/organizations.model')
+
 var safeEval = require('safe-eval');
 
 async function processExtractedFields(documentId, clearOverrideValues) {
@@ -163,6 +165,12 @@ async function processExtractedFields(documentId, clearOverrideValues) {
             fieldsAndValues: fieldsAndValues
         }
     })
+
+    const organizationData = await ORGANIZATION_MODEL.findOne({ _id: document.orgId });
+    if (organizationData) {
+        organizationData.documentUploadedCount = (organizationData.documentUploadedCount || 0) + 1;
+        await organizationData.save();
+    }
 
     return { fieldsAndValues }
 }
