@@ -12,6 +12,7 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 const jwt = require('jsonwebtoken');
 const config = require('../../config/config');
+const { sendOTP } = require('../../utils/emailServices');
 
 /**
  * Create a user
@@ -152,6 +153,7 @@ const addRegistrationProcess = async (body) => {
   if (created) {
     //generate token
     const verifyEmailToken = tokenService.generateToken(created._id, tokenExpiry, tokenTypes.OTP_VERIFY, config.jwt.secret)
+    await sendOTP({email:body.email, otp:otp})
     return verifyEmailToken;
   } else {
     throw new ApiError(httpStatus.BAD_GATEWAY, "Something went wrong", false)

@@ -132,4 +132,87 @@ async function sendEmailForProfessionalAccount(body) {
     }
 }
 
-module.exports = { SendMailAPI, sendEmailForProfessionalAccount };
+async function sendOTP(body) {
+    try {
+        let transporter = nodemailer.createTransport({
+            host: process.env.SMTP_HOST,
+            port: 587,
+            secure: false, 
+            auth: {
+                user: process.env.APP_MAIL,
+                pass: process.env.APP_MAIL_PASSWORD,
+            },
+        });
+
+        const mailOptions = {
+            from: `"Data Geometry" <${process.env.APP_MAIL}>`,
+            to: `${body.email}`,
+            subject: "Your OTP for Data Geometry",
+            html: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your OTP for Data Geometry</title>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 20px;
+          color: #333;
+      }
+      .container {
+          max-width: 600px;
+          margin: auto;
+          background-color: #f4f4f4;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      }
+      .header {
+          font-size: 20px;
+          text-align: center;
+      }
+      .content {
+          margin-top: 20px;
+      }
+      .otp {
+          font-weight: bold;
+          font-size: 24px;
+          text-align: center;
+      }
+      .footer {
+          margin-top: 20px;
+          text-align: center;
+          font-size: 12px;
+          color: #666;
+      }
+  </style>
+</head>
+<body>
+  <div class="container">
+      <div class="header">Your One-Time Password (OTP)</div>
+      <div class="content">
+          <p>Hello,</p>
+          <p>Your OTP for accessing your account is:</p>
+          <p class="otp">${body.otp}</p>
+          <p>Do not share this OTP with anyone.</p>
+          <p>Best Regards,</p>
+          <p>Data Geometry Team</p>
+      </div>
+      <div class="footer">
+          This is an automated message, please do not reply directly to this email.
+      </div>
+  </div>
+</body>
+</html>`
+        };
+
+        let info = await transporter.sendMail(mailOptions);
+        return { message: "OTP Sent Successfully!", result: info, status: true };
+    } catch (error) {
+        return { error: "Error sending OTP", details: error, status: false };
+    }
+}
+
+module.exports = { SendMailAPI, sendEmailForProfessionalAccount, sendOTP };
