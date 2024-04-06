@@ -58,10 +58,10 @@ async function sendEmailForProfessionalAccount(body) {
         });
 
         const mailOptions = {
-            from: `"Kalpesh Jain" <${process.env.APP_MAIL}>`,
-            to: "kalpeshdalal@sdlccorp.com",
+            from: `"Data Geometry" <${process.env.APP_MAIL}>`,
+            to: `${body.email}`,
             subject: "Professional Account Activation - Data Geometry",
-            cc: ["shankarbevale@sdlccorp.com", "kalpeshdalal305@gmail.com"],
+            cc: ["shashank@sdlccorp.com", "piyush@sdlccorp.com"],
             html: `<!DOCTYPE html>
 <html lang="en">
 <head>
