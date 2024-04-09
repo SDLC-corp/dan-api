@@ -199,6 +199,12 @@ const registration = async ({ token, password }) => {
       const payload = { name: registrationProcess.orgName, website: registrationProcess.website }
       const organization = await ORGANIZATION_MODEL.create(payload);
       const roleData = await Role.findOne({ name: 'Organization Admin', active: true })
+      if(registrationProcess?.email){
+          const user = await User.findOne({ email: registrationProcess.email, active: true })
+          if(user && user?.password){
+            throw new ApiError(httpStatus.BAD_GATEWAY, "Password Already Saved!", false)
+          }
+      }
       if (organization) {
         const userObj = {
           email: registrationProcess?.email,
@@ -213,7 +219,9 @@ const registration = async ({ token, password }) => {
         const user = await User.create(userObj);
         if (user) {
           registrationProcess.processCompleted = true;
-          await registrationProcess.save();
+          const result  = await registrationProcess.save();
+          return result.email
+
         } else {
           throw new ApiError(httpStatus.BAD_GATEWAY, "Something went wrong", false)
         }
