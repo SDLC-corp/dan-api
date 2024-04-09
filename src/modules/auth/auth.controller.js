@@ -14,6 +14,7 @@ const register = catchAsync(async (req, res) => {
     email,
     password,
     name,
+    phone,
     profilePic,
     role,
     roleId
@@ -21,6 +22,7 @@ const register = catchAsync(async (req, res) => {
     "email",
     "password",
     "name",
+    "phone",
     "profilePic",
     "role",
     "roleId"
@@ -37,6 +39,7 @@ const register = catchAsync(async (req, res) => {
     email,
     password,
     name,
+    phone,
     roleId,
     profilePic,
     role,
@@ -107,9 +110,9 @@ const refreshTokens = catchAsync(async (req, res) => {
 
 const addRegistrationProcess = catchAsync(async (req, res) => {
 
-  const { name, website, orgName, email } = await pick(req.body, ['name', 'website', 'orgName', 'email']);
+  const { name, website, orgName, email, phone } = await pick(req.body, ['name', 'website', 'orgName', 'email','phone']);
 
-  const result = await authService.addRegistrationProcess({ name, website, orgName, email });
+  const result = await authService.addRegistrationProcess({ name, website, orgName, email, phone });
 
   sendResponse(res, httpStatus.OK, result, null);
 

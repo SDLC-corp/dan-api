@@ -11,6 +11,10 @@ const registrationProcessSchema = mongoose.Schema(
             type: String,
             required: true
         },
+        phone: {
+            type: String,
+            required: true
+        },
         orgName: {
             type: String,
             trim: true,

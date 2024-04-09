@@ -204,6 +204,7 @@ const registration = async ({ token, password }) => {
           email: registrationProcess?.email,
           password: password,
           name: registrationProcess?.name,
+          phone:registrationProcess?.phone,
           orgId: organization?._id,
           role: "admin",
           roleId: roleData._id,

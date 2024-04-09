@@ -97,6 +97,11 @@ const addRegistrationProcessValidation = {
           "any.required": `Email is a required field`,
           "string.email": `Email must be valid mail`,
       }),
+      phone: Joi.string().required().pattern(new RegExp('^\\+?[1-9]\\d{1,14}$')).messages({
+        "string.empty": `Phone number must contain value`,
+        "any.required": `Phone number is a required field`,
+        "string.pattern.base": `Phone number must be a valid international phone number`,
+      }),
       orgName: Joi.string().required().messages({
           "string.empty": `Organization Name must contain value`,
           "any.required": `Organization Name is a required field`
