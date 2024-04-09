@@ -4,7 +4,8 @@ const Model = require("../role.model")
 const mongoose = require("mongoose")
 
 async function add({name, description,disabledModules, orgId }) {
-    let findQuery = { active: true, name, description}
+    let findQuery = { active: true, name, description,orgId: mongoose.Types.ObjectId(orgId)}
+    
     let present = await Model.findOne(findQuery)
     orgId = mongoose.Types.ObjectId(orgId)
     
