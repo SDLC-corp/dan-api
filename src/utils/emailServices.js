@@ -61,7 +61,7 @@ async function sendEmailForProfessionalAccount(body) {
             from: `"Data Geometry" <${process.env.APP_MAIL}>`,
             to: `${body.email}`,
             subject: "Professional Account Activation - Data Geometry",
-            cc: ["shashank@sdlccorp.com", "piyush@sdlccorp.com"],
+            cc: process.env.CC_EMAILS.split(','),
             html: `<!DOCTYPE html>
 <html lang="en">
 <head>
