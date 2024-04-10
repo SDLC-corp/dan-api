@@ -168,7 +168,7 @@ async function processExtractedFields(documentId, clearOverrideValues) {
 
     const organizationData = await ORGANIZATION_MODEL.findOne({ _id: document.orgId });
     if (organizationData) {
-        organizationData.documentUploadedCount = (organizationData.documentUploadedCount || 0) + 1;
+        organizationData.documentUploadedCount = (Number(organizationData?.documentUploadedCount ? organizationData.documentUploadedCount : 0) || 0) + 1;
         await organizationData.save();
     }
 
