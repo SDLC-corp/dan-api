@@ -50,15 +50,25 @@ if (config.env === 'production') {
 
 
 //Middleware
-app.use(session({
-  secret: "secret",
-  resave: false,
-  saveUninitialized: true,
-}))
-passport.serializeUser(function (user, done) {
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'change-me-in-env',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 1000 * 60 * 60 * 8, // 8 hours
+    },
+  })
+);
+
+passport.serializeUser((user, done) => {
   done(null, user);
 });
-passport.deserializeUser(function (obj, done) {
+
+passport.deserializeUser((obj, done) => {
   done(null, obj);
 });
 
