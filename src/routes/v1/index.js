@@ -16,6 +16,7 @@ const documentNotesRoute = require('./documentNotes.route');
 const organizationsRoute = require('./organizations.route')
 const { uploadFile } = require('../../utils/fileUpload');
 const router = express.Router();
+const healthRoute = require('./health.route');
 
 const defaultRoutes = [
   {
@@ -69,6 +70,10 @@ const defaultRoutes = [
   {
     path: '/organizations',
     route: organizationsRoute
+  },
+  { 
+    path: '/health', 
+    route: healthRoute 
   }
 ];
 
