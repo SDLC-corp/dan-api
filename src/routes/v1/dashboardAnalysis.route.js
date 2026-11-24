@@ -7,4 +7,5 @@ const router = express.Router();
 router.route('/')
     .get(auth("adminAccess"), Controller.listDocumentCount)
 
+
 module.exports = router;
